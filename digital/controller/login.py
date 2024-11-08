@@ -5,6 +5,10 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
+def index(request):
+    return HttpResponse("<h1>HOLA <h1>")
+
+@csrf_exempt
 def LOGIniciarSesion(request):
     data = json.loads(request.body)
     datosGenerales = data.get("datosGenerales")
@@ -35,6 +39,9 @@ def LOGObtenerUsuarioBarra(request):
 
 @csrf_exempt
 def LOGGuardarInformacionUsuarioBarra(request):
+    if(not request.session.get('idUsuario', False)) :
+        return HttpResponse()
+    
     data = json.loads(request.body)
     datosGenerales = data.get("datosGenerales")
     idUsuario = request.session.get('idUsuario')
