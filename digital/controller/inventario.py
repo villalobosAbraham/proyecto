@@ -16,7 +16,20 @@ def INVObtenerLibrosPopulares(request) :
 def INVObtenerLibrosRecomendados(request) :
     if(not request.session.get('idUsuario', False)) :
         return HttpResponse()
+    
     resultado = inventario_model.INVObtenerLibrosRecomendados(1)
+
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def INVAgregarAumentarLibroCarrito(request) :  #Falta hacer pruebas
+    if(not request.session.get('idUsuario', False)) :
+        return HttpResponse()
+    
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    datosGenerales["IdUsuario"] = request.session.get('idUsuario', 1)
+    resultado = inventario_model.INVAgregarAumentarLibroCarrito(datosGenerales)
 
     return JsonResponse(resultado, safe=False)
 
