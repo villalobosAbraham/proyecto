@@ -23,12 +23,12 @@ def INVObtenerLibrosRecomendados(request) :
 
 @csrf_exempt
 def INVAgregarAumentarLibroCarrito(request) :  #Falta hacer pruebas
-    if(not request.session.get('idUsuario', False)) :
-        return HttpResponse()
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
     
     data = json.loads(request.body)
     datosGenerales = data.get("datosGenerales")
-    datosGenerales["IdUsuario"] = request.session.get('idUsuario', 1)
+    datosGenerales["idUsuario"] = request.session.get('idUsuario', 1)
     resultado = inventario_model.INVAgregarAumentarLibroCarrito(datosGenerales)
 
     return JsonResponse(resultado, safe=False)

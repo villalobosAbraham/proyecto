@@ -179,18 +179,20 @@ def obtenerIdsGenerosLibrosRecomendados(idUsuario) :
 def INVAgregarAumentarLibroCarrito(datosGenerales) :
     existenciaCarrito = comprobarExistenciaLibroCarrito(datosGenerales)
     
-    if existenciaCarrito :
-        agregarLibroCarrito(datosGenerales)
+    if not existenciaCarrito :
+        return agregarLibroCarrito(datosGenerales)
     else :
-        actualizarLibroCarritoCompra(datosGenerales)
-
-
-    return existenciaCarrito
-
+        cantidadLibroCarrito = existenciaCarrito[1]
+        stockLibro = existenciaCarrito[2]
+        if ((datosGenerales["cantidad"] + cantidadLibroCarrito) > stockLibro) :
+            return False
+        datosGenerales["idCarrito"] = existenciaCarrito[0]
+        datosGenerales["cantidad"] += cantidadLibroCarrito
+        actualizarLibroCarritoCompra(datosGenerales, existenciaCarrito)
 
 def comprobarExistenciaLibroCarrito(datosGenerales) :
     sql = """SELECT
-                ven_carrodecompra.id, ven_carrodecompra.cantidad, ven_carrodecompra.idlibro,
+                ven_carrodecompra.id, ven_carrodecompra.cantidad,
 
                 inv_inventariolibros.cantidad AS stock
             FROM
@@ -228,4 +230,23 @@ def agregarLibroCarrito(datosGenerales) :
         return True
     except IntegrityError as e:
         print("Error en la inserción, transacción revertida:", e)
+        return False 
+
+def actualizarLibroCarritoCompra(datosGenerales) :
+    sql = """UPDATE 
+            ven_carrodecompra
+        SET
+            cantidad = '""" + str(datosGenerales["cantidad"]) + """'
+        WHERE
+            idusuario = '""" + str(datosGenerales["idUsuario"]) + """' AND
+            idlibro = '""" + str(datosGenerales["idLibro"]) + """'
+        """
+    
+    try :
+        with transaction.atomic():
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+        return True
+    except IntegrityError as e:
+        print("Error en la Actualizacion, transacción revertida:", e)
         return False 
