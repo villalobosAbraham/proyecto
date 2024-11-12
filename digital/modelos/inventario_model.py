@@ -184,11 +184,11 @@ def INVAgregarAumentarLibroCarrito(datosGenerales) :
     else :
         cantidadLibroCarrito = existenciaCarrito[1]
         stockLibro = existenciaCarrito[2]
-        if ((datosGenerales["cantidad"] + cantidadLibroCarrito) > stockLibro) :
+        if datosGenerales["cantidad"] + cantidadLibroCarrito > stockLibro :
             return False
         datosGenerales["idCarrito"] = existenciaCarrito[0]
         datosGenerales["cantidad"] += cantidadLibroCarrito
-        actualizarLibroCarritoCompra(datosGenerales, existenciaCarrito)
+        return actualizarLibroCarritoCompra(datosGenerales)
 
 def comprobarExistenciaLibroCarrito(datosGenerales) :
     sql = """SELECT
@@ -238,8 +238,7 @@ def actualizarLibroCarritoCompra(datosGenerales) :
         SET
             cantidad = '""" + str(datosGenerales["cantidad"]) + """'
         WHERE
-            idusuario = '""" + str(datosGenerales["idUsuario"]) + """' AND
-            idlibro = '""" + str(datosGenerales["idLibro"]) + """'
+            id = '""" + str(datosGenerales["idCarrito"]) + """'
         """
     
     try :
