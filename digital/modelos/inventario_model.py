@@ -279,12 +279,27 @@ def INVObtenerLibrosCarritoCompra(idUsuario) :
         GROUP BY
             ven_carrodecompra.idlibro"""
     
+    with connection.cursor() as cursor:
+            cursor.execute(sql)
+            resultado = cursor.fetchall()
+    
+    if not resultado :
+        return False
+    else :
+        return resultado
+    
+def INVLimpiarCarritoCompra(idUsuario) :
+    sql = """DELETE
+        FROM
+            ven_carrodecompra
+        WHERE
+            idusuario = '""" + str(idUsuario) + """'"""
+    
     try :
         with transaction.atomic():
             with connection.cursor() as cursor:
                 cursor.execute(sql)
-                resultado = cursor.fetchall()
-        return resultado
+        return True
     except IntegrityError as e:
-        print("Error en la Actualizacion, transacción revertida:", e)
+        print("Error en la limpieza, transacción revertida:", e)
         return False 

@@ -28,18 +28,23 @@ def INVAgregarAumentarLibroCarrito(request) :  #Falta hacer pruebas
     
     data = json.loads(request.body)
     datosGenerales = data.get("datosGenerales")
-    datosGenerales["idUsuario"] = request.session.get('idUsuario', False)
+    datosGenerales["idUsuario"] = request.session.get('idUsuario')
     resultado = inventario_model.INVAgregarAumentarLibroCarrito(datosGenerales)
 
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt
 def INVObtenerLibrosCarritoCompra(request) :
-    # if(not request.session.get('idUsuario', False)) :
-    #     return HttpResponse()
+    if(not request.session.get('idUsuario', False)) :
+        return HttpResponse()
 
-    resultado = inventario_model.INVObtenerLibrosCarritoCompra(request.session.get('idUsuario', False))
+    resultado = inventario_model.INVObtenerLibrosCarritoCompra(request.session.get('idUsuario'))
 
     return JsonResponse(resultado, safe=False)
     
-
+def INVLimpiarCarritoCompra(request) :
+    if(not request.session.get('idUsuario', False)) :
+        return HttpResponse()
+    
+    resultado = inventario_model.INVLimpiarCarritoCompra(request.session.get('idUsuario'))
+    return JsonResponse(resultado, safe=False)
