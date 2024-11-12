@@ -249,3 +249,42 @@ def actualizarLibroCarritoCompra(datosGenerales) :
     except IntegrityError as e:
         print("Error en la Actualizacion, transacción revertida:", e)
         return False 
+    
+def INVObtenerLibrosCarritoCompra(idUsuario) :
+    sql = """SELECT 
+            ven_carrodecompra.idlibro,
+            MAX(ven_carrodecompra.cantidad) AS cantidad,
+            MAX(cat_libros.titulo) AS titulo,
+            MAX(cat_libros.precio) AS precio,
+            MAX(cat_libros.descuento) AS descuento,
+            MAX(cat_libros.iva) AS iva,
+            MAX(cat_libros.portada) AS portada,
+            STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), '  ') AS autor,
+            MAX(inv_inventariolibros.cantidad) AS limiteLibro
+        FROM
+            ven_carrodecompra
+        LEFT JOIN
+            cat_libros ON ven_carrodecompra.idlibro = cat_libros.id
+        LEFT JOIN
+            inv_inventariolibros ON ven_carrodecompra.idlibro = inv_inventariolibros.idlibro
+        LEFT JOIN
+            cat_librosautores ON ven_carrodecompra.idlibro = cat_librosautores.idlibro
+        LEFT JOIN
+            conf_autores ON cat_librosautores.idautor = conf_autores.idautor
+        WHERE
+            ven_carrodecompra.idusuario = '""" + str(idUsuario) + """'
+            AND ven_carrodecompra.activo = 'S' 
+            AND cat_libros.activo = 'S'
+            AND inv_inventariolibros.activo = 'S'
+        GROUP BY
+            ven_carrodecompra.idlibro"""
+    
+    try :
+        with transaction.atomic():
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+                resultado = cursor.fetchall()
+        return resultado
+    except IntegrityError as e:
+        print("Error en la Actualizacion, transacción revertida:", e)
+        return False 
