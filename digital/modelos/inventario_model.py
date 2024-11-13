@@ -303,3 +303,38 @@ def INVLimpiarCarritoCompra(idUsuario) :
     except IntegrityError as e:
         print("Error en la limpieza, transacción revertida:", e)
         return False 
+    
+def INVBorrarLibroCarrito(datosGenerales) :
+    sql = """DELETE
+        FROM
+            ven_carrodecompra
+        WHERE
+            idusuario = '""" + str(datosGenerales["idUsuario"]) + """' AND
+            idlibro = '""" + str(datosGenerales["idLibro"]) + """'"""
+    
+    try :
+        with transaction.atomic():
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+        return True
+    except IntegrityError as e:
+        print("Error en la limpieza, transacción revertida:", e)
+        return False 
+
+def INVActualizarCantidadCarrito(datosGenerales) :
+    sql = """UPDATE
+            ven_carrodecompra
+        SET
+            cantidad = '""" + str(datosGenerales["cantidad"]) + """'
+        WHERE
+            idusuario = '""" + str(datosGenerales["idUsuario"]) + """' AND 
+            idlibro = '""" + str(datosGenerales["idLibro"]) + """'"""
+
+    try :
+        with transaction.atomic():
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+        return True
+    except IntegrityError as e:
+        print("Error en la limpieza, transacción revertida:", e)
+        return False
