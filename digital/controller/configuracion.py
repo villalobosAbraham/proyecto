@@ -12,3 +12,16 @@ def CONFObtenerGenerosFiltros(request) :
     resultado = configuracion_model.CONFObtenerGenerosFiltros()
 
     return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def CONFFiltrarLibros(request) :  
+    if(not request.session.get('idUsuario', False)) :
+        return HttpResponse()
+    
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    datosGenerales["generos"] = ", ".join(datosGenerales["generos"])
+    
+    resultado = configuracion_model.CONFFiltrarLibros(datosGenerales)
+
+    return JsonResponse(resultado, safe=False)

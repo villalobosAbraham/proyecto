@@ -22,3 +22,6 @@ def CONFObtenerGenerosFiltros() :
         resultados = cursor.fetchall()
 
     return resultados
+
+def CONFFiltrarLibros(datosGenerales) :
+    juan = 0

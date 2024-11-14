@@ -25,5 +25,6 @@ urlpatterns = [
     
     # CONFIGURACION
     path("CONFObtenerGenerosFiltros/", configuracion.CONFObtenerGenerosFiltros),
+    path("CONFFiltrarLibros/", configuracion.CONFFiltrarLibros),
 
 ]
