@@ -19,6 +19,7 @@ urlpatterns = [
     path("INVObtenerLibrosCarritoCompra/", inventario.INVObtenerLibrosCarritoCompra),
     path("INVLimpiarCarritoCompra/", inventario.INVLimpiarCarritoCompra),
     path("INVBorrarLibroCarrito/", inventario.INVBorrarLibroCarrito),
-    path("INVActualizarCantidadCarrito/", inventario.INVActualizarCantidadCarrito),
+    path("INVActualizarCantidadLibroCarrito/", inventario.INVActualizarCantidadLibroCarrito),
+    path("INVRegistrarVisualizacion/", inventario.INVRegistrarVisualizacion),
     
 ]

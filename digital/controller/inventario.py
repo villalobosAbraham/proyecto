@@ -2,6 +2,7 @@ import json
 import digital.modelos.inventario_model as inventario_model 
 from django.http import JsonResponse
 from django.http import HttpResponse
+from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
@@ -63,7 +64,7 @@ def INVBorrarLibroCarrito(request) :
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt
-def INVActualizarCantidadCarrito(request) :
+def INVActualizarCantidadLibroCarrito(request) :
     if(not request.session.get('idUsuario', False)) :
         return HttpResponse()
     
@@ -71,5 +72,18 @@ def INVActualizarCantidadCarrito(request) :
     datosGenerales = data.get("datosGenerales")
     datosGenerales["idUsuario"] = request.session.get('idUsuario')
 
-    resultado = inventario_model.INVActualizarCantidadCarrito(datosGenerales)
+    resultado = inventario_model.INVActualizarCantidadLibroCarrito(datosGenerales)
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def INVRegistrarVisualizacion(request) :
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
+    
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    datosGenerales["idUsuario"] = request.session.get('idUsuario')
+    datosGenerales["fecha"] = datetime.now().strftime("%Y-%m-%d")
+
+    resultado = inventario_model.INVRegistrarVisualizacion(datosGenerales)
     return JsonResponse(resultado, safe=False)

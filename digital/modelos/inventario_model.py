@@ -321,7 +321,7 @@ def INVBorrarLibroCarrito(datosGenerales) :
         print("Error en la limpieza, transacción revertida:", e)
         return False 
 
-def INVActualizarCantidadCarrito(datosGenerales) :
+def INVActualizarCantidadLibroCarrito(datosGenerales) :
     sql = """UPDATE
             ven_carrodecompra
         SET
@@ -338,3 +338,20 @@ def INVActualizarCantidadCarrito(datosGenerales) :
     except IntegrityError as e:
         print("Error en la limpieza, transacción revertida:", e)
         return False
+    
+def INVRegistrarVisualizacion(datosGenerales) :
+    sql = """INSERT INTO 
+                inv_visualizaciones
+            (fecha, idlibro, idusuario)
+        VALUES
+            ('""" + str(datosGenerales["fecha"]) + """', '""" + str(datosGenerales["idLibro"]) + """', '""" + str(datosGenerales["idUsuario"]) + """')"""
+    
+    try :
+        with transaction.atomic():
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+        return True
+    except IntegrityError as e:
+        print("Error en el registro, transacción revertida:", e)
+        return False
+
