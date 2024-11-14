@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 import digital.controller.login as login
 import digital.controller.inventario as inventario
+import digital.controller.configuracion as configuracion
 
 urlpatterns = [
     # LOGIN
@@ -22,4 +23,7 @@ urlpatterns = [
     path("INVActualizarCantidadLibroCarrito/", inventario.INVActualizarCantidadLibroCarrito),
     path("INVRegistrarVisualizacion/", inventario.INVRegistrarVisualizacion),
     
+    # CONFIGURACION
+    path("CONFObtenerGenerosFiltros/", configuracion.CONFObtenerGenerosFiltros),
+
 ]

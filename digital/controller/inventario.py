@@ -77,8 +77,8 @@ def INVActualizarCantidadLibroCarrito(request) :
 
 @csrf_exempt
 def INVRegistrarVisualizacion(request) :
-    # if(not request.session.get('idUsuario', False)) :
-    #     return HttpResponse()
+    if(not request.session.get('idUsuario', False)) :
+        return HttpResponse()
     
     data = json.loads(request.body)
     datosGenerales = data.get("datosGenerales")
