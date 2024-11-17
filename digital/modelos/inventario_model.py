@@ -218,7 +218,7 @@ def agregarLibroCarrito(datosGenerales) :
     cantidad = datosGenerales["cantidad"]
 
     try:
-        with transaction.atomic():
+        with transaction.atomic() :
             sql = """
                 INSERT INTO ven_carrodecompra (idusuario, idlibro, cantidad, activo)
                 VALUES ('"""+str(idUsuario)+"""', '"""+str(idLibro)+"""', '"""+str(cantidad)+"""', 'S')
@@ -242,7 +242,7 @@ def actualizarLibroCarritoCompra(datosGenerales) :
         """
     
     try :
-        with transaction.atomic():
+        with transaction.atomic() :
             with connection.cursor() as cursor:
                 cursor.execute(sql)
         return True
@@ -296,7 +296,7 @@ def INVLimpiarCarritoCompra(idUsuario) :
             idusuario = '""" + str(idUsuario) + """'"""
     
     try :
-        with transaction.atomic():
+        with transaction.atomic() :
             with connection.cursor() as cursor:
                 cursor.execute(sql)
         return True
@@ -313,7 +313,7 @@ def INVBorrarLibroCarrito(datosGenerales) :
             idlibro = '""" + str(datosGenerales["idLibro"]) + """'"""
     
     try :
-        with transaction.atomic():
+        with transaction.atomic() :
             with connection.cursor() as cursor:
                 cursor.execute(sql)
         return True
@@ -331,7 +331,7 @@ def INVActualizarCantidadLibroCarrito(datosGenerales) :
             idlibro = '""" + str(datosGenerales["idLibro"]) + """'"""
 
     try :
-        with transaction.atomic():
+        with transaction.atomic() :
             with connection.cursor() as cursor:
                 cursor.execute(sql)
         return True
@@ -347,7 +347,7 @@ def INVRegistrarVisualizacion(datosGenerales) :
             ('""" + str(datosGenerales["fecha"]) + """', '""" + str(datosGenerales["idLibro"]) + """', '""" + str(datosGenerales["idUsuario"]) + """')"""
     
     try :
-        with transaction.atomic():
+        with transaction.atomic() :
             with connection.cursor() as cursor:
                 cursor.execute(sql)
         return True

@@ -27,4 +27,7 @@ urlpatterns = [
     path("CONFObtenerGenerosFiltros/", configuracion.CONFObtenerGenerosFiltros),
     path("CONFFiltrarLibros/", configuracion.CONFFiltrarLibros),
 
+    # VENTAS
+    path("VENRegistrarVenta/", ventas.VENRegistrarVenta),
+
 ]

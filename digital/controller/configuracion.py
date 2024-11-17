@@ -15,8 +15,8 @@ def CONFObtenerGenerosFiltros(request) :
 
 @csrf_exempt
 def CONFFiltrarLibros(request) :  
-    # if(not request.session.get('idUsuario', False)) :
-    #     return HttpResponse()
+    if(not request.session.get('idUsuario', False)) :
+        return HttpResponse()
     
     data = json.loads(request.body)
     datosGenerales = data.get("datosGenerales")
