@@ -3,6 +3,7 @@ from . import views
 import digital.controller.login as login
 import digital.controller.inventario as inventario
 import digital.controller.configuracion as configuracion
+import digital.controller.ventas as ventas
 
 urlpatterns = [
     # LOGIN
