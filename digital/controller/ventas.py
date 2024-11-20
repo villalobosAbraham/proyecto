@@ -18,3 +18,22 @@ def VENRegistrarVenta(request) :
 
     resultado = ventas_model.VENRegistrarVenta(datosGenerales)
     return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def VENObtenerDetallesVenta(request) :
+    if(not request.session.get('idUsuario', False)) :
+        return HttpResponse()
+    
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+
+    resultado = ventas_model.VENObtenerDetallesVenta(datosGenerales["idVenta"])
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def VENObtenerVentasUsuario(request) :
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
+
+    resultado = ventas_model.VENObtenerVentasUsuario(1)
+    return JsonResponse(resultado, safe=False)

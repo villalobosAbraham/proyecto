@@ -31,6 +31,8 @@ urlpatterns = [
 
     # VENTAS
     path("VENRegistrarVenta/", ventas.VENRegistrarVenta),
+    path("VENObtenerDetallesVenta/", ventas.VENObtenerDetallesVenta),
+    path("VENObtenerVentasUsuario/", ventas.VENObtenerVentasUsuario),
 
     # ADMINISTRACION
     path("ADMObtenerLibros/", administracion.ADMObtenerLibros),

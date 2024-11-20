@@ -177,3 +177,43 @@ def limpiarCarroCompra(idUsuario) :
     except IntegrityError as e:
         print("Error en la inserción, transacción revertida:", e)
         return False 
+
+def VENObtenerDetallesVenta(idVenta) :
+    sql = """SELECT
+                ven_ventad.idlibro, ven_ventad.cantidad, ven_ventad.precio, ven_ventad.descuento, ven_ventad.iva, ven_ventad.total,
+
+                cat_libros.titulo, cat_libros.portada
+            FROM
+                ven_ventad
+            JOIN 
+                cat_libros ON ven_ventad.idlibro = cat_libros.id
+            WHERE
+                ven_ventad.idventa = '""" + str(idVenta) + """'"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultados = cursor.fetchall()
+    
+    return resultados
+
+def VENObtenerVentasUsuario(idUsuario) :
+    sql = """SELECT
+                ven_ventam.id, ven_ventam.fecha, ven_ventam.total, ven_ventam.idusuariocompra, ven_ventam.idvendedor, ven_ventam.idestadoentrega, ven_ventam.idordenpaypal,
+
+                log_usuarios.nombre, log_usuarios.apellidopaterno, log_usuarios.apellidomaterno,
+
+                conf_estadoentrega.estado
+            FROM
+                ven_ventam
+            LEFT JOIN
+                log_usuarios ON ven_ventam.idvendedor = log_usuarios.id
+            LEFT JOIN
+                conf_estadoentrega ON ven_ventam.idestadoentrega = conf_estadoentrega.id
+            WHERE
+                ven_ventam.idusuariocompra = '""" + str(idUsuario) + """'"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultados = cursor.fetchall()
+    
+    return resultados
