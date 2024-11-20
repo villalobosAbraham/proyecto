@@ -1,8 +1,4 @@
-from django.db.models import Max, F
 from django.db import transaction, IntegrityError, connection
-import psycopg2
-from psycopg2.extras import DictCursor
-import digital.modelos.inventario_model as inventario_model 
 
 
 def VENRegistrarVenta(datosGenerales) :

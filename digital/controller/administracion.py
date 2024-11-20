@@ -9,9 +9,6 @@ from django.views.decorators.csrf import csrf_exempt
 def ADMObtenerLibros(request) :
     if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
         return HttpResponse()
-    
-    datosGenerales = {}
-    datosGenerales["idUsuario"] = request.session.get('idUsuario')
 
-    resultado = administracion_model.ADMObtenerLibros(datosGenerales)
+    resultado = administracion_model.ADMObtenerLibros()
     return JsonResponse(resultado, safe=False)
