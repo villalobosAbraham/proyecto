@@ -46,3 +46,77 @@ def ADMObtenerLibros() :
         resultados = cursor.fetchall()
 
     return resultados
+
+def ADMObtenerAutoresActivos() :
+    sql = """SELECT
+                idautor, nombre, apellidopaterno, apellidomaterno
+            FROM
+                conf_autores
+            WHERE
+                activo = 'S'"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultados = cursor.fetchall()
+
+    return resultados
+
+def ADMObtenerAutores() :
+    sql = """SELECT
+                conf_autores.idautor, conf_autores.nombre, conf_autores.apellidopaterno, 
+                conf_autores.apellidomaterno, conf_autores.fechanacimiento, conf_autores.idnacionalidad,
+                conf_autores.activo,
+
+                conf_nacionalidad.nacionalidad
+            FROM
+                conf_autores
+            JOIN 
+                conf_nacionalidad ON conf_autores.idnacionalidad = conf_nacionalidad.id"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultados = cursor.fetchall()
+
+    return resultados
+
+def ADMObtenerGenerosActivos() :
+    sql = """SELECT
+                id, genero
+            FROM
+                conf_genero
+            WHERE
+                activo = 'S'"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultados = cursor.fetchall()
+
+    return resultados
+
+def ADMObtenerEditorialesActivos() :
+    sql = """SELECT
+                id, editorial
+            FROM
+                cat_editoriales
+            WHERE
+                activo = 'S'"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultados = cursor.fetchall()
+
+    return resultados
+
+def ADMObtenerIdiomasActivos() :
+    sql = """SELECT
+                id, idioma
+            FROM
+                cat_idioma
+            WHERE
+                activo = 'S'"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultados = cursor.fetchall()
+
+    return resultados

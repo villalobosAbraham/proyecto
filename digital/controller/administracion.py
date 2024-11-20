@@ -12,3 +12,43 @@ def ADMObtenerLibros(request) :
 
     resultado = administracion_model.ADMObtenerLibros()
     return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMObtenerAutoresActivos(request) :
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
+
+    resultado = administracion_model.ADMObtenerAutoresActivos()
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMObtenerAutores(request) :
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
+
+    resultado = administracion_model.ADMObtenerAutores()
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMObtenerGenerosActivos(request) :
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
+
+    resultado = administracion_model.ADMObtenerGenerosActivos()
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMObtenerEditorialesActivos(request) :
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
+
+    resultado = administracion_model.ADMObtenerEditorialesActivos()
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMObtenerIdiomasActivos(request) :
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
+
+    resultado = administracion_model.ADMObtenerIdiomasActivos()
+    return JsonResponse(resultado, safe=False)

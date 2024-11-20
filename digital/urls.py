@@ -36,5 +36,10 @@ urlpatterns = [
 
     # ADMINISTRACION
     path("ADMObtenerLibros/", administracion.ADMObtenerLibros),
+    path("ADMObtenerAutoresActivos/", administracion.ADMObtenerAutoresActivos),
+    path("ADMObtenerAutores/", administracion.ADMObtenerAutores),
+    path("ADMObtenerGenerosActivos/", administracion.ADMObtenerGenerosActivos),
+    path("ADMObtenerEditorialesActivos/", administracion.ADMObtenerEditorialesActivos),
+    path("ADMObtenerIdiomasActivos/", administracion.ADMObtenerIdiomasActivos),
 
 ]
