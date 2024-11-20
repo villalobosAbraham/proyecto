@@ -7,13 +7,12 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
 def VENRegistrarVenta(request) :
-    # if(not request.session.get('idUsuario', False)) :
-    #     return HttpResponse()
+    if(not request.session.get('idUsuario', False)) :
+        return HttpResponse()
     
     data = json.loads(request.body)
     datosGenerales = data.get("datosGenerales")
-    # datosGenerales = {}
-    datosGenerales["idUsuario"] = request.session.get('idUsuario', 1)
+    datosGenerales["idUsuario"] = request.session.get('idUsuario')
     datosGenerales["fecha"] = datetime.now().strftime("%Y-%m-%d")
     datosGenerales["hora"] = datetime.now().strftime('%H:%M:%S')
 
