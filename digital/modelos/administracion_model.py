@@ -120,3 +120,60 @@ def ADMObtenerIdiomasActivos() :
         resultados = cursor.fetchall()
 
     return resultados
+
+def ADMAgregarLibroCatalogo(datosGenerales) :
+    try:
+        with transaction.atomic() :
+        
+            idLibro = insertarLibro(datosGenerales) 
+
+            insertarLibroAutor(idLibro, datosGenerales["idAutor"])
+
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
+
+def insertarLibro(datosGenerales) :
+    sql = """INSERT INTO cat_libros
+                (titulo, precio, descuento, iva, idgenero, fechapublicacion, portada, sinopsis, fecharegistro, paginas, ididioma, ideditorial, activo)
+            VALUES
+                ('""" + str(datosGenerales["titulo"]) + """', 
+                '""" + str(datosGenerales["precio"]) + """', 
+                '""" + str(datosGenerales["descuento"]) + """', 
+                '""" + str(datosGenerales["iva"]) + """', 
+                '""" + str(datosGenerales["idGenero"]) + """', 
+                '""" + str(datosGenerales["fechaPublicacion"]) + """', 
+                '""" + str(datosGenerales["portada"]) + """', 
+                '""" + str(datosGenerales["sinopsis"]) + """', 
+                '""" + str(datosGenerales["fecha"]) + """', 
+                '""" + str(datosGenerales["paginasLibro"]) + """', 
+                '""" + str(datosGenerales["idIdioma"]) + """', 
+                '""" + str(datosGenerales["idEditorial"]) + """', 
+                'S')
+                RETURNING id"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+                id_generado = cursor.fetchone()[0]  # Recuperar el ID generado
+            return id_generado
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
+    
+def insertarLibroAutor(idLibro, idAutor) :
+    sql = """INSERT INTO cat_librosautores
+                (idlibro, idautor)
+            VALUES
+                ('""" + str(idLibro) + """', '""" + str(idAutor) + """')"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
