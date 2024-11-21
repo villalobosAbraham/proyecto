@@ -55,12 +55,34 @@ def ADMObtenerIdiomasActivos(request) :
 
 @csrf_exempt
 def ADMAgregarLibroCatalogo(request) :
-    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-    #     return HttpResponse()
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
 
     data = json.loads(request.body)
     datosGenerales = data.get("datosGenerales")
     datosGenerales["fecha"] = datetime.now().strftime("%Y-%m-%d")
 
     resultado = administracion_model.ADMAgregarLibroCatalogo(datosGenerales)
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMDeshabilitarLibro(request) :
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
+
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+
+    resultado = administracion_model.ADMDeshabilitarLibro(datosGenerales["idLibro"])
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMHabilitarLibro(request) :
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
+
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+
+    resultado = administracion_model.ADMHabilitarLibro(datosGenerales["idLibro"])
     return JsonResponse(resultado, safe=False)
