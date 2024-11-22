@@ -237,3 +237,48 @@ def ADMHabilitarLibro(idLibro) :
     except IntegrityError as e:
         print("Error en la inserción, transacción revertida:", e)
         return False
+    
+def ADMDeshabilitarAutor(idAutor) :
+    idsLibros = obtenerIdsLibrosAutor(idAutor) 
+
+    try:
+        with transaction.atomic() :
+            deshabilitarAutor(idAutor)
+            for libro in idsLibros :
+                ADMDeshabilitarLibro(libro)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
+
+def obtenerIdsLibrosAutor(idAutor) :
+    sql = """SELECT
+                idlibro
+            FROM 
+                cat_librosautores
+            WHERE
+                idautor = '""" + str(idAutor) + """'"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultados = cursor.fetchall()
+
+    resultados = [item[0] for item in resultados]
+    return resultados
+
+def deshabilitarAutor(idAutor) :
+    sql = """UPDATE 
+                conf_autores
+            SET
+                activo = 'N'
+            WHERE
+                idautor = '""" + str(idAutor) + """'"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
