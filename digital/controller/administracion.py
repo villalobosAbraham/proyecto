@@ -89,11 +89,22 @@ def ADMHabilitarLibro(request) :
 
 @csrf_exempt
 def ADMDeshabilitarAutor(request) :
-    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-    #     return HttpResponse()
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
 
     data = json.loads(request.body)
     datosGenerales = data.get("datosGenerales")
 
     resultado = administracion_model.ADMDeshabilitarAutor(datosGenerales["idAutor"])
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMHabilitarAutor(request) :
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
+
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+
+    resultado = administracion_model.ADMHabilitarAutor(datosGenerales["idAutor"])
     return JsonResponse(resultado, safe=False)

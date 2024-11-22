@@ -282,3 +282,20 @@ def deshabilitarAutor(idAutor) :
     except IntegrityError as e:
         print("Error en la inserción, transacción revertida:", e)
         return False
+    
+def ADMHabilitarAutor(idAutor) :
+    sql = """UPDATE 
+                conf_autores
+            SET
+                activo = 'S'
+            WHERE
+                idautor = '""" + str(idAutor) + """'"""
+
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
