@@ -537,3 +537,28 @@ def ADMObtenerVentas() :
         resultados = cursor.fetchall()
 
     return resultados
+
+def ADMObtenerVenta(idVenta) :
+    sql = """SELECT
+                ven_ventam.id, ven_ventam.fecha, ven_ventam.total, ven_ventam.idusuariocompra, ven_ventam.idvendedor, ven_ventam.idestadoentrega, ven_ventam.idordenpaypal,
+
+                comprador.nombre AS nombreComprador, comprador.apellidopaterno AS apellidoPaternoComprador, comprador.apellidomaterno AS apelidoMaternoComprador,
+                vendedor.nombre AS nombreVendedor, vendedor.apellidopaterno AS apellidoPaternoVendedor, vendedor.apellidomaterno AS apellidoMaternoVendedor,
+
+                conf_estadoentrega.estado
+            FROM
+                ven_ventam
+            LEFT JOIN
+                log_usuarios AS comprador ON ven_ventam.idusuariocompra = comprador.id
+            LEFT JOIN
+                log_usuarios AS vendedor ON ven_ventam.idusuariocompra = vendedor.id
+            LEFT JOIN
+                conf_estadoentrega ON ven_ventam.idestadoentrega = conf_estadoentrega.id
+            WHERE
+                ven_ventam.id = '""" + str(idVenta) + """'"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultado = cursor.fetchone()
+
+    return resultado

@@ -129,8 +129,8 @@ def ADMAgregarAutor(request) :
 
 @csrf_exempt
 def ADMObtenerInventarioLibros(request) :
-    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-    #     return HttpResponse()
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
     
     resultado = administracion_model.ADMObtenerInventarioLibros()
     return JsonResponse(resultado, safe=False)
@@ -181,8 +181,19 @@ def ADMDeshabilitarInventario(request) :
 
 @csrf_exempt
 def ADMObtenerVentas(request) :
-    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-    #     return HttpResponse()
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
     
     resultado = administracion_model.ADMObtenerVentas()
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMObtenerVenta(request) :
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
+    
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    
+    resultado = administracion_model.ADMObtenerVenta(datosGenerales["idVenta"])
     return JsonResponse(resultado, safe=False)
