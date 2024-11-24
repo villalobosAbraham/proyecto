@@ -5,7 +5,6 @@ from django.http import HttpResponse
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 
-@csrf_exempt
 def ADMObtenerLibros(request) :
     if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
         return HttpResponse()
@@ -13,7 +12,6 @@ def ADMObtenerLibros(request) :
     resultado = administracion_model.ADMObtenerLibros()
     return JsonResponse(resultado, safe=False)
 
-@csrf_exempt
 def ADMObtenerAutoresActivos(request) :
     if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
         return HttpResponse()
@@ -131,8 +129,8 @@ def ADMAgregarAutor(request) :
 
 @csrf_exempt
 def ADMObtenerInventarioLibros(request) :
-    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-        return HttpResponse()
+    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+    #     return HttpResponse()
     
     resultado = administracion_model.ADMObtenerInventarioLibros()
     return JsonResponse(resultado, safe=False)
@@ -172,11 +170,19 @@ def ADMHabilitarInventario(request) :
 
 @csrf_exempt
 def ADMDeshabilitarInventario(request) :
-    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-    #     return HttpResponse()
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
     
     data = json.loads(request.body)
     datosGenerales = data.get("datosGenerales")
     
     resultado = administracion_model.ADMDeshabilitarInventario(datosGenerales["idLibro"])
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMObtenerVentas(request) :
+    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+    #     return HttpResponse()
+    
+    resultado = administracion_model.ADMObtenerVentas()
     return JsonResponse(resultado, safe=False)

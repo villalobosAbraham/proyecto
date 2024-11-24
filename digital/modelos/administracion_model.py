@@ -517,3 +517,23 @@ def ADMDeshabilitarInventario(idLibro) :
     except IntegrityError as e:
         print("Error en la inserción, transacción revertida:", e)
         return False
+    
+def ADMObtenerVentas() :
+    sql = """SELECT
+                ven_ventam.id, ven_ventam.fecha, ven_ventam.total, ven_ventam.idusuariocompra, ven_ventam.idvendedor, ven_ventam.idestadoentrega, ven_ventam.idordenpaypal,
+
+                log_usuarios.nombre, log_usuarios.apellidopaterno, log_usuarios.apellidomaterno,
+
+                conf_estadoentrega.estado
+            FROM
+                ven_ventam
+            LEFT JOIN
+                log_usuarios ON ven_ventam.idusuariocompra = log_usuarios.id
+            LEFT JOIN
+                conf_estadoentrega ON ven_ventam.idestadoentrega = conf_estadoentrega.id"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultados = cursor.fetchall()
+
+    return resultados

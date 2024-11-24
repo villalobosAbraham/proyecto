@@ -15,9 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.http import HttpResponseNotFound
+from django.urls import path, include, re_path
+
+def default_view(request) :
+    return HttpResponseNotFound("Página no encontrada. Prueba otra URL.")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # LIBRERIA DIGITAL
     path("", include("digital.urls")),
+
+    # EXCEPCIONES
+    re_path(r'^.*$', default_view)
 ]

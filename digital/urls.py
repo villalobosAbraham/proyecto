@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 import digital.controller.login as login
 import digital.controller.inventario as inventario
@@ -53,5 +53,6 @@ urlpatterns = [
     path("ADMObtenerDatosInventarioLibro/", administracion.ADMObtenerDatosInventarioLibro),
     path("ADMHabilitarInventario/", administracion.ADMHabilitarInventario),
     path("ADMDeshabilitarInventario/", administracion.ADMDeshabilitarInventario),
+    path("ADMObtenerVentas/", administracion.ADMObtenerVentas),
 
 ]
