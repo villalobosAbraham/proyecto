@@ -454,3 +454,49 @@ def ADMObtenerDatosInventarioLibro(idLibro) :
         resultado = cursor.fetchone()
 
     return resultado
+
+def ADMHabilitarInventario(idLibro) :
+    existenciaLibro = comprobarExistenciaInventarioLibro(idLibro)
+
+    try:
+        with transaction.atomic() :
+            if existenciaLibro :
+                habilitarInventarioLibro(idLibro)
+            else :
+                insertarHabilitarInventarioLibro(idLibro)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
+
+def habilitarInventarioLibro(idLibro) :
+    sql = """UPDATE 
+                inv_inventariolibros
+            SET
+                activo = 'S'
+            WHERE
+                idlibro = '""" + str(idLibro) + """'"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
+    
+def insertarHabilitarInventarioLibro(idLibro) :
+    sql = """INSERT INTO inv_inventariolibros
+                (idlibro, cantidad, activo)
+            VALUES
+                ('""" + str(idLibro) + """','0','S')"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False

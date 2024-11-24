@@ -51,5 +51,6 @@ urlpatterns = [
     path("ADMObtenerInventarioLibros/", administracion.ADMObtenerInventarioLibros),
     path("ADMModificarInventarioLibro/", administracion.ADMModificarInventarioLibro),
     path("ADMObtenerDatosInventarioLibro/", administracion.ADMObtenerDatosInventarioLibro),
+    path("ADMHabilitarInventario/", administracion.ADMHabilitarInventario),
 
 ]
