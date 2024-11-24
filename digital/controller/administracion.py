@@ -147,3 +147,14 @@ def ADMModificarInventarioLibro(request) :
     
     resultado = administracion_model.ADMModificarInventarioLibro(datosGenerales)
     return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMObtenerDatosInventarioLibro(request) :
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
+    
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    
+    resultado = administracion_model.ADMObtenerDatosInventarioLibro(datosGenerales["idLibro"])
+    return JsonResponse(resultado, safe=False)

@@ -425,3 +425,32 @@ def insertarLibroInventario(datosGenerales) :
     except IntegrityError as e:
         print("Error en la inserción, transacción revertida:", e)
         return False
+    
+def ADMObtenerDatosInventarioLibro(idLibro) :
+    sql = """SELECT DISTINCT
+                cat_libros.id, 
+                cat_libros.titulo, 
+
+                cat_librosautores.idautor,
+
+                STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), '  ') AS autores,
+
+                inv_inventariolibros.cantidad
+            FROM
+                cat_libros
+            LEFT JOIN
+                cat_librosautores ON cat_libros.id = cat_librosautores.idlibro
+            LEFT JOIN
+                conf_autores ON cat_librosautores.idautor = conf_autores.idautor
+            LEFT JOIN
+                inv_inventariolibros ON cat_libros.id = inv_inventariolibros.idlibro
+            WHERE
+                cat_libros.id = '""" + str(idLibro) + """'
+            GROUP BY
+                cat_libros.id, cat_librosautores.idautor, inv_inventariolibros.cantidad"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultado = cursor.fetchone()
+
+    return resultado
