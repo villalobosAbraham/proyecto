@@ -119,12 +119,20 @@ def ADMObtenerNacionesActivas(request) :
 
 @csrf_exempt
 def ADMAgregarAutor(request) :
-    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-    #     return HttpResponse()
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
     
     data = json.loads(request.body)
     datosGenerales = data.get("datosGenerales")
     datosGenerales["fecha"] = datetime.now().strftime("%Y-%m-%d")
 
     resultado = administracion_model.ADMAgregarAutor(datosGenerales)
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMObtenerInventarioLibros(request) :
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
+    
+    resultado = administracion_model.ADMObtenerInventarioLibros()
     return JsonResponse(resultado, safe=False)

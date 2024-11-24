@@ -334,3 +334,31 @@ def ADMAgregarAutor(datosGenerales) :
     except IntegrityError as e:
         print("Error en la inserción, transacción revertida:", e)
         return False
+    
+def ADMObtenerInventarioLibros() :
+    sql = """SELECT
+                cat_libros.id, cat_libros.titulo, cat_libros.idgenero, cat_libros.ididioma, cat_libros.ideditorial,
+
+                inv_inventariolibros.cantidad, inv_inventariolibros.activo,
+
+                conf_genero.genero,
+
+                cat_idioma.id,
+
+                cat_editoriales.editorial
+            FROM
+                cat_libros
+            LEFT JOIN
+                inv_inventariolibros ON cat_libros.id = inv_inventariolibros.idlibro
+            LEFT JOIN
+                conf_genero ON cat_libros.idgenero = conf_genero.id
+            LEFT JOIN
+                cat_idioma ON cat_libros.ididioma = cat_idioma.id
+            LEFT JOIN
+                cat_editoriales ON cat_libros.ideditorial = cat_editoriales.id"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultados = cursor.fetchall()
+
+    return resultados
