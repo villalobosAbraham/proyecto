@@ -55,5 +55,6 @@ urlpatterns = [
     path("ADMDeshabilitarInventario/", administracion.ADMDeshabilitarInventario),
     path("ADMObtenerVentas/", administracion.ADMObtenerVentas),
     path("ADMObtenerVenta/", administracion.ADMObtenerVenta),
+    path("ADMEntregarVenta/", administracion.ADMEntregarVenta),
 
 ]

@@ -562,3 +562,21 @@ def ADMObtenerVenta(idVenta) :
         resultado = cursor.fetchone()
 
     return resultado
+
+def ADMEntregarVenta(datosGenerales) :
+    sql = """UPDATE 
+                ven_ventam
+            SET
+                idvendedor = '""" + str(datosGenerales["idUsuario"]) + """',
+                idestadoentrega = '2'
+            WHERE
+                id = '""" + str(datosGenerales["idVenta"]) + """'"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False

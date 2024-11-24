@@ -197,3 +197,15 @@ def ADMObtenerVenta(request) :
     
     resultado = administracion_model.ADMObtenerVenta(datosGenerales["idVenta"])
     return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMEntregarVenta(request) :
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
+    
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    datosGenerales["idUsuario"] = request.session.get('idUsuario')
+    
+    resultado = administracion_model.ADMEntregarVenta(datosGenerales)
+    return JsonResponse(resultado, safe=False)
