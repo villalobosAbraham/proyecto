@@ -362,3 +362,66 @@ def ADMObtenerInventarioLibros() :
         resultados = cursor.fetchall()
 
     return resultados
+
+def ADMModificarInventarioLibro(datosGenerales) :
+    existenciaLibro = comprobarExistenciaInventarioLibro(datosGenerales["idLibro"])
+
+    try:
+        with transaction.atomic() :
+            if existenciaLibro :
+                actualizarLibroInventario(datosGenerales)
+            else :
+                insertarLibroInventario(datosGenerales)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
+
+def comprobarExistenciaInventarioLibro(idLibro) :
+    sql = """SELECT
+                idlibro
+            FROM
+                inv_inventariolibros
+            WHERE
+                idlibro = '""" + str(idLibro) + """'"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultado = cursor.fetchone()
+
+    return resultado
+
+def actualizarLibroInventario(datosGenerales) :
+    sql = """UPDATE 
+                inv_inventariolibros
+            SET
+                cantidad = '""" + str(datosGenerales["cantidad"]) + """'
+            WHERE
+                idlibro = '""" + str(datosGenerales["idLibro"]) + """'"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
+    
+def insertarLibroInventario(datosGenerales) :
+    sql = """INSERT INTO 
+                    inv_inventariolibros
+                (idlibro, cantidad, activo)
+            VALUES
+                ('""" + str(datosGenerales["idLibro"]) + """',
+                '""" + str(datosGenerales["cantidad"]) + """',
+                'N')"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False

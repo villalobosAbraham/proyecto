@@ -49,5 +49,6 @@ urlpatterns = [
     path("ADMObtenerNacionesActivas/", administracion.ADMObtenerNacionesActivas),
     path("ADMAgregarAutor/", administracion.ADMAgregarAutor),
     path("ADMObtenerInventarioLibros/", administracion.ADMObtenerInventarioLibros),
+    path("ADMModificarInventarioLibro/", administracion.ADMModificarInventarioLibro),
 
 ]
