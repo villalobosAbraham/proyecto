@@ -299,3 +299,38 @@ def ADMHabilitarAutor(idAutor) :
     except IntegrityError as e:
         print("Error en la inserción, transacción revertida:", e)
         return False
+    
+def ADMObtenerNacionesActivas() :
+    sql = """SELECT
+                id, nacionalidad, siglas
+            FROM
+                conf_nacionalidad
+            WHERE
+                activo = 'S'"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultados = cursor.fetchall()
+
+    return resultados
+
+def ADMAgregarAutor(datosGenerales) :
+    sql = """INSERT INTO conf_autores
+                (nombre, apellidopaterno, apellidomaterno, fechanacimiento, fecharegistro, idnacionalidad, activo)
+            VALUES
+                ('""" + str(datosGenerales["nombre"]) + """',
+                '""" + str(datosGenerales["apellidoPaterno"]) + """',
+                '""" + str(datosGenerales["apellidoMaterno"]) + """',
+                '""" + str(datosGenerales["fechaNacimiento"]) + """',
+                '""" + str(datosGenerales["fecha"]) + """',
+                '""" + str(datosGenerales["idNacionalidad"]) + """',
+                'S')"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False

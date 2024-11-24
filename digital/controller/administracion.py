@@ -108,3 +108,23 @@ def ADMHabilitarAutor(request) :
 
     resultado = administracion_model.ADMHabilitarAutor(datosGenerales["idAutor"])
     return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMObtenerNacionesActivas(request) :
+    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+        return HttpResponse()
+
+    resultado = administracion_model.ADMObtenerNacionesActivas()
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMAgregarAutor(request) :
+    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+    #     return HttpResponse()
+    
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    datosGenerales["fecha"] = datetime.now().strftime("%Y-%m-%d")
+
+    resultado = administracion_model.ADMAgregarAutor(datosGenerales)
+    return JsonResponse(resultado, safe=False)
