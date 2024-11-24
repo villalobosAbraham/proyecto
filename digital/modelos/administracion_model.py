@@ -500,3 +500,20 @@ def insertarHabilitarInventarioLibro(idLibro) :
     except IntegrityError as e:
         print("Error en la inserción, transacción revertida:", e)
         return False
+    
+def ADMDeshabilitarInventario(idLibro) :
+    sql = """UPDATE 
+                inv_inventariolibros
+            SET
+                activo = 'N'
+            WHERE
+                idlibro = '""" + str(idLibro) + """'"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
