@@ -18,6 +18,7 @@ urlpatterns = [
     # INVENTARIO
     path("INVObtenerLibrosPopulares/", inventario.INVObtenerLibrosPopulares),
     path("INVObtenerLibrosRecomendados/", inventario.INVObtenerLibrosRecomendados),
+    path("INVComprobarCarritoCantidad/", inventario.INVComprobarCarritoCantidad),
     path("INVAgregarAumentarLibroCarrito/", inventario.INVAgregarAumentarLibroCarrito),
     path("INVObtenerLibrosCarritoCompra/", inventario.INVObtenerLibrosCarritoCompra),
     path("INVLimpiarCarritoCompra/", inventario.INVLimpiarCarritoCompra),

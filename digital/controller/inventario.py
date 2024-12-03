@@ -1,5 +1,6 @@
 import json
-import digital.modelos.inventario_model as inventario_model 
+import digital.modelos.inventario_model as inventario_model
+import digital.controller.tokens as tokens 
 from django.http import JsonResponse
 from django.http import HttpResponse
 from datetime import datetime
@@ -20,6 +21,18 @@ def INVObtenerLibrosRecomendados(request) :
     
     resultado = inventario_model.INVObtenerLibrosRecomendados(1)
 
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def INVComprobarCarritoCantidad(request) :
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    if (not tokens.validarToken(datosGenerales)) :
+        return JsonResponse(False, safe=False)
+    
+    resultado = inventario_model.INVComprobarCarritoCantidad(datosGenerales["idUsuario"])
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt

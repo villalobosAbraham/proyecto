@@ -34,7 +34,7 @@ def validarToken(token) :
     
     try :
         fechaActual = datetime.now()
-        fechaToken = datetime.fromisoformat(token["expiracion"])
+        fechaToken = datetime.strptime(token["expiracion"], "%Y-%m-%dT%H:%M:%S.%fZ")
 
         if (fechaActual > fechaToken) :
             return False

@@ -1,5 +1,5 @@
 from digital.models import LogUsuarios
-from django.db import transaction, IntegrityError
+from django.db import transaction, IntegrityError, connection
 
 def LOGIniciarSesion(datosGenerales) :
     try:
@@ -39,17 +39,21 @@ def LOGRegistrarUsuario(datosGenerales) :
         return False
 
 def LOGObtenerUsuarioBarra(idUsuario) :
-    try:
-        usuario = LogUsuarios.objects.filter(
-                id = idUsuario, 
-            ).values(
-                'id', 
-                'idtipousuario'
-            ).first()
-        return usuario
-    except LogUsuarios.DoesNotExist:
-        # Aquí puedes retornar None, un mensaje, o lanzar un error
+    sql = """SELECT
+                    nombre, apellidopaterno, apellidomaterno, email, telefono, fechanacimiento
+                FROM
+                    log_usuarios
+                WHERE
+                    id = '""" + str(idUsuario) + """'"""
+                    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultado = cursor.fetchone()
+    
+    if not resultado :
         return False
+    else :
+        return resultado
     
 def LOGGuardarInformacionUsuarioBarra(datosGenerales, idUsuario) :
     try:

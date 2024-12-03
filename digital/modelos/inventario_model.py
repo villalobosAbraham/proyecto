@@ -204,8 +204,8 @@ def comprobarExistenciaLibroCarrito(datosGenerales) :
                 ven_carrodecompra.idlibro = '""" + str(datosGenerales["idLibro"]) + """' """
     
     with connection.cursor() as cursor:
-            cursor.execute(sql)
-            resultado = cursor.fetchone()
+        cursor.execute(sql)
+        resultado = cursor.fetchone()
     
     if not resultado :
         return False
@@ -355,3 +355,20 @@ def INVRegistrarVisualizacion(datosGenerales) :
         print("Error en el registro, transacción revertida:", e)
         return False
 
+def INVComprobarCarritoCantidad(idUsuario) :
+    sql = """SELECT 
+            SUM(cantidad) AS total
+        FROM
+            ven_carrodecompra
+        WHERE
+            idusuario = '""" + str(idUsuario) + """' AND
+            activo = 'S'"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultado = cursor.fetchone()[0]
+    
+    if not resultado :
+        return False
+    else :
+        return resultado

@@ -40,9 +40,12 @@ def LOGRegistrarUsuario(request):
 
 @csrf_exempt
 def LOGObtenerUsuarioBarra(request):
-    idUsuario = request.session.get('idUsuario')
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    if (not tokens.validarToken(datosGenerales)) :
+        return JsonResponse(False, safe=False)
     
-    resultado = login_model.LOGObtenerUsuarioBarra(idUsuario)
+    resultado = login_model.LOGObtenerUsuarioBarra(datosGenerales["idUsuario"])
     
     return JsonResponse(resultado, safe=False)
 
