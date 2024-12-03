@@ -2,6 +2,10 @@ import json
 import digital.modelos.login_model as login_model 
 from django.http import JsonResponse
 from django.http import HttpResponse
+from datetime import datetime, timedelta
+from django.utils import timezone
+import digital.controller.tokens as tokens
+
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
@@ -18,7 +22,12 @@ def LOGIniciarSesion(request):
     if (resultado) :
         request.session["idUsuario"] = resultado["id"]
         request.session["idTipoUsuario"] = resultado["idtipousuario"]
-    return JsonResponse(resultado, safe=False)
+
+        token = tokens.crearToken(resultado["id"], resultado["idtipousuario"], datosGenerales["correo"], datosGenerales["contraseña"])
+
+        return JsonResponse(token, safe=False)
+    else :
+        return JsonResponse(False, safe=False)
 
 @csrf_exempt
 def LOGRegistrarUsuario(request):

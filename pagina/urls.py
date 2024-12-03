@@ -19,7 +19,7 @@ from django.http import HttpResponseNotFound
 from django.urls import path, include, re_path
 
 def default_view(request) :
-    return HttpResponseNotFound("Página no encontrada. Prueba otra URL.")
+    return HttpResponseNotFound("Página no encontrada. Prueba otra URL., ESCRIBE BIEN, PENDEJO!!!")
 
 urlpatterns = [
     path('admin/', admin.site.urls),

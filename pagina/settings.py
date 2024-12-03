@@ -38,12 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'digital',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -51,6 +53,21 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'pagina.urls'
+
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SECURE = False  # Cambiar a True en producción si usas HTTPS
+SESSION_COOKIE_SECURE = False  # Cambiar a True en producción si usas HTTPS
+SESSION_COOKIE_SAMESITE = None
+CORS_ALLOW_CREDENTIALS = True  # Permite credenciales (cookies) en solicitudes CORS
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",  # Agrega la URL de tu frontend
+]
+
+# Si usas cookies SameSite
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:4200',
+]
 
 TEMPLATES = [
     {
@@ -69,7 +86,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'pagina.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
