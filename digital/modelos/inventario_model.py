@@ -22,7 +22,7 @@ def INVObtenerLibrosPopulares() :
                 MAX(cat_idioma.idioma) AS idioma,
                 MAX(cat_editoriales.editorial) AS editorial,
                 
-                STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), '  ') AS autores,
+                STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), ' y ') AS autores,
                 MAX(inv_inventariolibros.cantidad) AS limiteLibro
             FROM 
                 cat_libros 
@@ -69,8 +69,8 @@ def obtenerIdsLibrosPopulares():
         ) as subquery
         GROUP BY idlibro
         ORDER BY MAX(fecha) DESC, idlibro
-        LIMIT 10 """
-
+        LIMIT 3 """
+        # LIMIT 10 """
     with connection.cursor() as cursor:
         cursor.execute(sql)
         resultados = cursor.fetchall()
@@ -98,11 +98,12 @@ def INVObtenerLibrosRecomendados(idUsuario) :
 
                 MAX(conf_genero.genero),
 
-                MAX(cat_idioma.id),
+                MAX(cat_idioma.id) AS ididioma,
 
                 MAX(cat_editoriales.editorial),
 
-                STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), '  ') AS autores,
+                STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), ' y ') AS autores,
+                
                 MAX(inv_inventariolibros.cantidad) AS limiteLibro
             FROM 
                 cat_libros 
@@ -125,7 +126,8 @@ def INVObtenerLibrosRecomendados(idUsuario) :
                 cat_libros.id
             ORDER BY 
                 RANDOM()    
-            LIMIT 10"""
+            LIMIT 3 """
+            # LIMIT 10 """
 
     with connection.cursor() as cursor:
         cursor.execute(sql)
