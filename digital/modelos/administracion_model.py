@@ -21,7 +21,7 @@ def ADMObtenerLibros() :
 
                 cat_editoriales.editorial,
 
-                STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), '  ') AS autores,
+                STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), ' y ') AS autores,
                 
                 inv_inventariolibros.cantidad
             FROM 
@@ -433,7 +433,7 @@ def ADMObtenerDatosInventarioLibro(idLibro) :
 
                 cat_librosautores.idautor,
 
-                STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), '  ') AS autores,
+                STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), ' y ') AS autores,
 
                 inv_inventariolibros.cantidad
             FROM

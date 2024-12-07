@@ -55,19 +55,17 @@ def LOGObtenerUsuarioBarra(idUsuario) :
     else :
         return resultado
     
-def LOGGuardarInformacionUsuarioBarra(datosGenerales, idUsuario) :
+def LOGGuardarInformacionUsuarioBarra(datosGenerales) :
     try:
         with transaction.atomic():
             LogUsuarios.objects.filter(
-                idusuario = idUsuario  
+                id = datosGenerales["idUsuario"]  
             ).update(
-                email = datosGenerales["email"],
-                contraseña = datosGenerales["contraseña"],
                 nombre = datosGenerales["nombre"],
-                apellidopaterno = datosGenerales["apellidopaterno"],
-                apellidomaterno = datosGenerales["apellidomaterno"],
+                apellidopaterno = datosGenerales["apellidoPaterno"],
+                apellidomaterno = datosGenerales["apellidoMaterno"],
                 telefono = datosGenerales["telefono"],
-                fechanacimiento = datosGenerales["fechanacimiento"],
+                fechanacimiento = datosGenerales["fechaNacimiento"],
             )
             # Otros posibles inserts o actualizaciones dentro de la misma transacción
         return True

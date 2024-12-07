@@ -59,6 +59,20 @@ def INVAgregarAumentarLibroCarrito(request) :  #Falta hacer pruebas
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt
+def INVObtenerDetallesLibro(request) :  #Falta hacer pruebas
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
+    data = json.loads(request.body)
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarToken(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
+    resultado = inventario_model.INVObtenerDetallesLibro(datosGenerales["idLibro"])
+
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
 def INVObtenerLibrosCarritoCompra(request) :
     if(not request.session.get('idUsuario', False)) :
         return HttpResponse()

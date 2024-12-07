@@ -38,7 +38,7 @@ def CONFFiltrarLibros(datosGenerales) :
                 cat_libros.paginas,
                 conf_genero.genero,
                 cat_editoriales.editorial,
-                STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), '  ') AS autores,
+                STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), ' y ') AS autores,
                 inv_inventariolibros.cantidad AS limiteLibro
             FROM 
                 cat_libros 

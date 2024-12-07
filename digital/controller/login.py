@@ -51,14 +51,16 @@ def LOGObtenerUsuarioBarra(request):
 
 @csrf_exempt
 def LOGGuardarInformacionUsuarioBarra(request):
-    if(not request.session.get('idUsuario', False)) :
-        return HttpResponse()
-    
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
     data = json.loads(request.body)
-    datosGenerales = data.get("datosGenerales")
-    idUsuario = request.session.get('idUsuario')
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarToken(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
     
-    resultado = login_model.LOGGuardarInformacionUsuarioBarra(datosGenerales, idUsuario)
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
+    
+    resultado = login_model.LOGGuardarInformacionUsuarioBarra(datosGenerales)
     
     return JsonResponse(resultado, safe=False)
 

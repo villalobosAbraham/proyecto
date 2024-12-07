@@ -252,6 +252,52 @@ def actualizarLibroCarritoCompra(datosGenerales) :
         print("Error en la Actualizacion, transacción revertida:", e)
         return False 
     
+def INVObtenerDetallesLibro(idLibro) :
+    sql = """SELECT DISTINCT
+                cat_libros.id,
+                cat_libros.titulo,
+                cat_libros.precio,
+                cat_libros.descuento,
+                cat_libros.iva,
+                cat_libros.fechapublicacion,
+                cat_libros.portada,
+                cat_libros.sinopsis,
+                cat_libros.fecharegistro,
+                cat_libros.paginas,
+                
+                cat_editoriales.editorial,
+                
+                cat_idioma.idioma,
+                
+                conf_genero.genero,
+                
+                STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), ' y ') AS autor
+            FROM
+                cat_libros
+            LEFT JOIN
+                cat_editoriales ON cat_libros.ideditorial = cat_editoriales.id
+            LEFT JOIN
+                cat_idioma ON cat_libros.ididioma = cat_idioma.id
+            LEFT JOIN
+                conf_genero ON cat_libros.idgenero = conf_genero.id
+            LEFT JOIN
+                cat_librosautores ON cat_libros.id = cat_librosautores.idlibro
+            LEFT JOIN
+                conf_autores ON cat_librosautores.idautor = conf_autores.idautor
+            WHERE
+                cat_libros.id = '""" + str(idLibro) + """'
+            GROUP BY 
+                cat_libros.id, cat_editoriales.editorial, cat_idioma.idioma, conf_genero.genero"""
+                
+    with connection.cursor() as cursor:
+            cursor.execute(sql)
+            resultado = cursor.fetchone()
+    
+    if not resultado :
+        return False
+    else :
+        return resultado
+    
 def INVObtenerLibrosCarritoCompra(idUsuario) :
     sql = """SELECT 
             ven_carrodecompra.idlibro,
@@ -261,7 +307,7 @@ def INVObtenerLibrosCarritoCompra(idUsuario) :
             MAX(cat_libros.descuento) AS descuento,
             MAX(cat_libros.iva) AS iva,
             MAX(cat_libros.portada) AS portada,
-            STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), '  ') AS autor,
+            STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), ' y ') AS autor,
             MAX(inv_inventariolibros.cantidad) AS limiteLibro
         FROM
             ven_carrodecompra
