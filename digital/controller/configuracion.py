@@ -20,12 +20,15 @@ def CONFObtenerGenerosFiltros(request) :
 
 @csrf_exempt
 def CONFFiltrarLibros(request) :  
-    if(not request.session.get('idUsuario', False)) :
-        return HttpResponse()
-    
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
     data = json.loads(request.body)
-    datosGenerales = data.get("datosGenerales")
-    datosGenerales["generos"] = ",".join(map(str,datosGenerales["generos"]))
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarToken(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
+    datosGenerales["generos"] = ",".join(map(str,datosGenerales["idsGeneros"]))
     
     resultado = configuracion_model.CONFFiltrarLibros(datosGenerales)
 

@@ -13,7 +13,8 @@ def CONFObtenerGenerosFiltros() :
             LEFT JOIN 
                 inv_inventariolibros ON cat_libros.id = inv_inventariolibros.idlibro 
             WHERE
-                conf_genero.activo = 'S'
+                conf_genero.activo = 'S' AND
+                cat_libros.activo = 'S'
             GROUP BY
                 idgenero"""
     
@@ -27,32 +28,36 @@ def CONFFiltrarLibros(datosGenerales) :
     generos = datosGenerales["generos"]
     libro = datosGenerales["libro"].lower()
     sql = """SELECT 
-                cat_libros.id,
-                cat_libros.titulo,
-                cat_libros.precio,
-                cat_libros.descuento,
-                cat_libros.iva,
-                cat_libros.fechapublicacion,
-                cat_libros.portada,
-                cat_libros.sinopsis,
-                cat_libros.paginas,
-                conf_genero.genero,
-                cat_editoriales.editorial,
+                cat_libros.id AS idlibro,
+                MAX(cat_libros.titulo) AS titulo,
+                MAX(cat_libros.precio) AS precio,
+                MAX(cat_libros.descuento) AS descuento,
+                MAX(cat_libros.iva) AS iva,
+                MAX(cat_libros.idgenero) AS idgenero,
+                MAX(cat_libros.fechapublicacion) AS fechapublicacion,
+                MAX(cat_libros.portada) AS portada,
+                MAX(cat_libros.sinopsis) AS sinopsis,
+                MAX(cat_libros.paginas) AS paginas,
+                
+                MAX(conf_genero.genero) AS genero,
+                MAX(cat_idioma.idioma) AS idioma,
+                MAX(cat_editoriales.editorial) AS editorial,
+                
                 STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), ' y ') AS autores,
-                inv_inventariolibros.cantidad AS limiteLibro
+                MAX(inv_inventariolibros.cantidad) AS limiteLibro
             FROM 
                 cat_libros 
-            JOIN 
+            LEFT JOIN 
                 conf_genero ON cat_libros.idgenero = conf_genero.id
-            JOIN 
+            LEFT JOIN 
                 cat_idioma ON cat_libros.ididioma = cat_idioma.id
-            JOIN 
+            LEFT JOIN 
                 cat_editoriales ON cat_libros.ideditorial = cat_editoriales.id
-            JOIN
+            LEFT JOIN
                 inv_inventariolibros ON cat_libros.id = inv_inventariolibros.idlibro
-            JOIN 
+            LEFT JOIN 
                 cat_librosautores ON cat_libros.id = cat_librosautores.idlibro
-            JOIN 
+            LEFT JOIN 
                 conf_autores ON cat_librosautores.idautor = conf_autores.idautor
             WHERE 
                 cat_libros.activo = 'S' AND
@@ -66,9 +71,9 @@ def CONFFiltrarLibros(datosGenerales) :
             OR LOWER(conf_autores.nombre) LIKE LOWER('%""" + str(libro) + """%') 
             OR LOWER(conf_autores.apellidopaterno) LIKE LOWER('%""" + str(libro) + """%') 
             OR LOWER(conf_autores.apellidomaterno) LIKE LOWER('%""" + str(libro) + """%')"""
-    elif not libro :
-        sql += """" AND cat_libros.idgeneroprincipal IN (""" + generos + """)"""
-    elif not generos :
+    elif generos :
+        sql += """ AND cat_libros.idgenero IN (""" + generos + """)"""
+    elif libro :
         sql += """AND LOWER(cat_libros.titulo) LIKE LOWER('%""" + str(libro) + """%') 
             OR LOWER(conf_autores.nombre) LIKE LOWER('%""" + str(libro) + """%') 
             OR LOWER(conf_autores.apellidopaterno) LIKE LOWER('%""" + str(libro) + """%') 
@@ -80,5 +85,4 @@ def CONFFiltrarLibros(datosGenerales) :
     with connection.cursor() as cursor:
         cursor.execute(sql)
         resultados = cursor.fetchall()
-
     return resultados
