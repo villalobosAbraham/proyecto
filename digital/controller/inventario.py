@@ -74,10 +74,14 @@ def INVObtenerDetallesLibro(request) :  #Falta hacer pruebas
 
 @csrf_exempt
 def INVObtenerLibrosCarritoCompra(request) :
-    if(not request.session.get('idUsuario', False)) :
-        return HttpResponse()
-
-    resultado = inventario_model.INVObtenerLibrosCarritoCompra(request.session.get('idUsuario'))
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    if (not tokens.validarToken(datosGenerales)) :
+        return JsonResponse(False, safe=False)
+    
+    resultado = inventario_model.INVObtenerLibrosCarritoCompra(datosGenerales["idUsuario"])
 
     return JsonResponse(resultado, safe=False)
     

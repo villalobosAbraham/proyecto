@@ -328,8 +328,8 @@ def INVObtenerLibrosCarritoCompra(idUsuario) :
             ven_carrodecompra.idlibro"""
     
     with connection.cursor() as cursor:
-            cursor.execute(sql)
-            resultado = cursor.fetchall()
+        cursor.execute(sql)
+        resultado = cursor.fetchall()
     
     if not resultado :
         return False
