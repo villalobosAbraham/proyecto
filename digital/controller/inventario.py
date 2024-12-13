@@ -84,6 +84,19 @@ def INVObtenerLibrosCarritoCompra(request) :
     resultado = inventario_model.INVObtenerLibrosCarritoCompra(datosGenerales["idUsuario"])
 
     return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def INVObtenerTotalesCarritoCompra(request) :
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    if (not tokens.validarToken(datosGenerales)) :
+        return JsonResponse(False, safe=False)
+    
+    resultado = inventario_model.INVObtenerTotalesCarritoCompra(datosGenerales["idUsuario"])
+
+    return JsonResponse(resultado, safe=False)
     
 @csrf_exempt
 def INVLimpiarCarritoCompra(request) :
@@ -95,24 +108,26 @@ def INVLimpiarCarritoCompra(request) :
 
 @csrf_exempt
 def INVBorrarLibroCarrito(request) :
-    if(not request.session.get('idUsuario', False)) :
-        return HttpResponse()
-    
     data = json.loads(request.body)
-    datosGenerales = data.get("datosGenerales")
-    datosGenerales["idUsuario"] = request.session.get('idUsuario')
-
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarToken(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
+    
     resultado = inventario_model.INVBorrarLibroCarrito(datosGenerales)
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt
 def INVActualizarCantidadLibroCarrito(request) :
-    if(not request.session.get('idUsuario', False)) :
-        return HttpResponse()
-    
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
     data = json.loads(request.body)
-    datosGenerales = data.get("datosGenerales")
-    datosGenerales["idUsuario"] = request.session.get('idUsuario')
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarToken(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
 
     resultado = inventario_model.INVActualizarCantidadLibroCarrito(datosGenerales)
     return JsonResponse(resultado, safe=False)

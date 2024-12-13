@@ -34,6 +34,9 @@ def LOGRegistrarUsuario(request):
     data = json.loads(request.body)
     datosGenerales = data.get("datosGenerales")
     
+    datosGenerales["activo"] = "S"
+    datosGenerales["idTipoUsuario"] = 1
+    datosGenerales["fechaRegistro"] = datetime.now().strftime("%Y-%m-%d")
     resultado = login_model.LOGRegistrarUsuario(datosGenerales)
     
     return JsonResponse(resultado, safe=False)

@@ -420,3 +420,25 @@ def INVComprobarCarritoCantidad(idUsuario) :
         return False
     else :
         return resultado
+    
+def INVObtenerTotalesCarritoCompra(idUsuario) :
+    sql = """SELECT 
+            ROUND(CAST(SUM(ven_carrodecompra.cantidad * cat_libros.precio) AS numeric), 2) AS subtotal,
+            ROUND(CAST(SUM(ven_carrodecompra.cantidad * cat_libros.descuento) AS numeric), 2) AS descuento,
+            ROUND(CAST(SUM(ven_carrodecompra.cantidad * cat_libros.iva) AS numeric), 2) AS iva,
+            ROUND(CAST(SUM((cat_libros.precio - cat_libros.descuento + cat_libros.iva) * ven_carrodecompra.cantidad) AS numeric), 2) AS total
+        FROM 
+            ven_carrodecompra
+        LEFT JOIN 
+            cat_libros ON ven_carrodecompra.idlibro = cat_libros.ID
+        WHERE 
+            ven_carrodecompra.idusuario = '""" + str(idUsuario) + """'"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultado = cursor.fetchone()
+    
+    if resultado :
+        return resultado
+    else :
+        return False

@@ -19,16 +19,18 @@ def LOGIniciarSesion(datosGenerales) :
 def LOGRegistrarUsuario(datosGenerales) :
     try:
         with transaction.atomic():
+            
             nuevo_usuario = LogUsuarios(
                 email = datosGenerales["email"],
                 contraseña = datosGenerales["contraseña"],
                 nombre = datosGenerales["nombre"],
-                apellidopaterno = datosGenerales["apellidopaterno"],
-                apellidomaterno = datosGenerales["apellidomaterno"],
-                fecharegistro = datosGenerales["fecharegistro"],
+                apellidopaterno = datosGenerales["apellidoPaterno"],
+                apellidomaterno = datosGenerales["apellidoMaterno"],
+                fecharegistro = datosGenerales["fechaRegistro"],
                 telefono = datosGenerales["telefono"],
-                fechanacimiento = datosGenerales["fechanacimiento"],
+                fechanacimiento = datosGenerales["fechaNacimiento"],
                 activo = datosGenerales["activo"],
+                idtipousuario_id = datosGenerales["idTipoUsuario"]
             )
             nuevo_usuario.save()
             # Otros posibles inserts o actualizaciones dentro de la misma transacción

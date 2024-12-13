@@ -26,6 +26,7 @@ urlpatterns = [
     path("INVBorrarLibroCarrito/", inventario.INVBorrarLibroCarrito),
     path("INVActualizarCantidadLibroCarrito/", inventario.INVActualizarCantidadLibroCarrito),
     path("INVRegistrarVisualizacion/", inventario.INVRegistrarVisualizacion),
+    path("INVObtenerTotalesCarritoCompra/", inventario.INVObtenerTotalesCarritoCompra),
     
     # CONFIGURACION
     path("CONFObtenerGenerosFiltros/", configuracion.CONFObtenerGenerosFiltros),
