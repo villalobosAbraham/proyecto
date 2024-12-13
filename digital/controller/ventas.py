@@ -24,11 +24,14 @@ def VENRegistrarVenta(request) :
 
 @csrf_exempt
 def VENObtenerDetallesVenta(request) :
-    if(not request.session.get('idUsuario', False)) :
-        return HttpResponse()
-    
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
     data = json.loads(request.body)
-    datosGenerales = data.get("datosGenerales")
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarToken(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
 
     resultado = ventas_model.VENObtenerDetallesVenta(datosGenerales["idVenta"])
     return JsonResponse(resultado, safe=False)
@@ -37,6 +40,10 @@ def VENObtenerDetallesVenta(request) :
 def VENObtenerVentasUsuario(request) :
     # if(not request.session.get('idUsuario', False)) :
     #     return HttpResponse()
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    if (not tokens.validarToken(datosGenerales)) :
+        return JsonResponse(False, safe=False)
 
-    resultado = ventas_model.VENObtenerVentasUsuario(1)
+    resultado = ventas_model.VENObtenerVentasUsuario(datosGenerales["idUsuario"])
     return JsonResponse(resultado, safe=False)
