@@ -6,6 +6,9 @@ import digital.controller.configuracion as configuracion
 import digital.controller.ventas as ventas
 import digital.controller.administracion as administracion
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     # LOGIN
     path("", login.index),
@@ -59,5 +62,6 @@ urlpatterns = [
     path("ADMObtenerVentas/", administracion.ADMObtenerVentas),
     path("ADMObtenerVenta/", administracion.ADMObtenerVenta),
     path("ADMEntregarVenta/", administracion.ADMEntregarVenta),
-
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

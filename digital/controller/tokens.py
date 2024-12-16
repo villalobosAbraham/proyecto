@@ -42,3 +42,18 @@ def validarToken(token) :
     except :
         return False
     
+def validarTokenEmpleados(token) :
+    if not token :
+        return False
+    
+    try :
+        fechaActual = datetime.now()
+        fechaToken = datetime.strptime(token["expiracion"], "%Y-%m-%dT%H:%M:%S.%fZ")
+        idTipoUsuario = token["idTipoUsuario"]
+
+        if (fechaActual > fechaToken or idTipoUsuario != 2) :
+            return False
+        return True
+    except :
+        return False
+    

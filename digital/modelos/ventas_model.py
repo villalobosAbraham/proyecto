@@ -94,11 +94,12 @@ def prepararTotalesVentaMaestra(librosCarrito) :
     total = 0
 
     for libro in librosCarrito :
-        importe += libro[1] * libro[2]
-        descuento += libro[1] * libro[3]
-        iva += libro[1] * libro[4]
-        total += importe + descuento + iva
+        importe += (libro[1] * libro[2])
+        descuento += (libro[1] * libro[3])
+        iva += (libro[1] * libro[4])
 
+    total = importe - descuento + iva
+    
     totales = {}
     totales["importe"] = round(importe, 2)
     totales["descuento"] = round(descuento, 2)
@@ -197,7 +198,7 @@ def VENObtenerDetallesVenta(idVenta) :
     return resultados
 
 def VENObtenerVentasUsuario(idUsuario) :
-    sql = """SELECT
+    sql = """SELECT DISTINCT
                 ven_ventam.id, ven_ventam.fecha, ven_ventam.total, ven_ventam.idusuariocompra, ven_ventam.idvendedor, ven_ventam.idestadoentrega, ven_ventam.idordenpaypal,
 
                 log_usuarios.nombre, log_usuarios.apellidopaterno, log_usuarios.apellidomaterno,

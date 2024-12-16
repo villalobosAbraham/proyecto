@@ -17,7 +17,7 @@ def ADMObtenerLibros() :
 
                 conf_genero.genero,
 
-                cat_idioma.id AS idioma,
+                cat_idioma.idioma,
 
                 cat_editoriales.editorial,
 
@@ -147,7 +147,7 @@ def insertarLibro(datosGenerales) :
                 '""" + str(datosGenerales["portada"]) + """', 
                 '""" + str(datosGenerales["sinopsis"]) + """', 
                 '""" + str(datosGenerales["fecha"]) + """', 
-                '""" + str(datosGenerales["paginasLibro"]) + """', 
+                '""" + str(datosGenerales["paginas"]) + """', 
                 '""" + str(datosGenerales["idIdioma"]) + """', 
                 '""" + str(datosGenerales["idEditorial"]) + """', 
                 'S')
