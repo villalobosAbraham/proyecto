@@ -194,19 +194,27 @@ def ADMHabilitarAutor(request) :
 
 @csrf_exempt
 def ADMObtenerNacionesActivas(request) :
-    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-        return HttpResponse()
+    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+    #     return HttpResponse()
+    
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGenerales)) :
+        return JsonResponse(False, safe=False)
 
     resultado = administracion_model.ADMObtenerNacionesActivas()
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt
 def ADMAgregarAutor(request) :
-    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-        return HttpResponse()
-    
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
     data = json.loads(request.body)
-    datosGenerales = data.get("datosGenerales")
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
     datosGenerales["fecha"] = datetime.now().strftime("%Y-%m-%d")
 
     resultado = administracion_model.ADMAgregarAutor(datosGenerales)
