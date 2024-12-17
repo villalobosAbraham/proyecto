@@ -222,52 +222,69 @@ def ADMAgregarAutor(request) :
 
 @csrf_exempt
 def ADMObtenerInventarioLibros(request) :
-    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-        return HttpResponse()
+    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+    #     return HttpResponse()
+    
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGenerales)) :
+        return JsonResponse(False, safe=False)
     
     resultado = administracion_model.ADMObtenerInventarioLibros()
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt
 def ADMModificarInventarioLibro(request) :
-    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-        return HttpResponse()
-    
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
     data = json.loads(request.body)
-    datosGenerales = data.get("datosGenerales")
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
     
     resultado = administracion_model.ADMModificarInventarioLibro(datosGenerales)
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt
 def ADMObtenerDatosInventarioLibro(request) :
-    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-        return HttpResponse()
-    
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
     data = json.loads(request.body)
-    datosGenerales = data.get("datosGenerales")
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
     
     resultado = administracion_model.ADMObtenerDatosInventarioLibro(datosGenerales["idLibro"])
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt
 def ADMHabilitarInventario(request) :
-    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-        return HttpResponse()
-    
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
     data = json.loads(request.body)
-    datosGenerales = data.get("datosGenerales")
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
     
     resultado = administracion_model.ADMHabilitarInventario(datosGenerales["idLibro"])
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt
 def ADMDeshabilitarInventario(request) :
-    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-        return HttpResponse()
-    
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
     data = json.loads(request.body)
-    datosGenerales = data.get("datosGenerales")
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
     
     resultado = administracion_model.ADMDeshabilitarInventario(datosGenerales["idLibro"])
     return JsonResponse(resultado, safe=False)

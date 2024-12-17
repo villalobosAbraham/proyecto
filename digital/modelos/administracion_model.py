@@ -337,13 +337,13 @@ def ADMAgregarAutor(datosGenerales) :
     
 def ADMObtenerInventarioLibros() :
     sql = """SELECT
-                cat_libros.id, cat_libros.titulo, cat_libros.idgenero, cat_libros.ididioma, cat_libros.ideditorial,
+                cat_libros.id, cat_libros.titulo, cat_libros.idgenero, cat_libros.ididioma, cat_libros.ideditorial, cat_libros.portada,
 
                 inv_inventariolibros.cantidad, inv_inventariolibros.activo,
 
                 conf_genero.genero,
 
-                cat_idioma.id,
+                cat_idioma.idioma,
 
                 cat_editoriales.editorial
             FROM
@@ -430,24 +430,14 @@ def ADMObtenerDatosInventarioLibro(idLibro) :
     sql = """SELECT DISTINCT
                 cat_libros.id, 
                 cat_libros.titulo, 
-
-                cat_librosautores.idautor,
-
-                STRING_AGG(CONCAT(conf_autores.nombre, ' ', conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno), ' y ') AS autores,
-
+                
                 inv_inventariolibros.cantidad
             FROM
                 cat_libros
             LEFT JOIN
-                cat_librosautores ON cat_libros.id = cat_librosautores.idlibro
-            LEFT JOIN
-                conf_autores ON cat_librosautores.idautor = conf_autores.idautor
-            LEFT JOIN
                 inv_inventariolibros ON cat_libros.id = inv_inventariolibros.idlibro
             WHERE
-                cat_libros.id = '""" + str(idLibro) + """'
-            GROUP BY
-                cat_libros.id, cat_librosautores.idautor, inv_inventariolibros.cantidad"""
+                cat_libros.id = '""" + str(idLibro) + """'"""
     
     with connection.cursor() as cursor:
         cursor.execute(sql)
