@@ -106,6 +106,7 @@ def ADMAgregarLibroCatalogo(request) :
     idEditorial = request.POST.get('idEditorial')
     fechaPublicacion = request.POST.get('fechaPublicacion')
     idAutor = request.POST.get('idAutor')
+    isbn = request.POST.get('ISBN')
         
     
     # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
@@ -130,10 +131,28 @@ def ADMAgregarLibroCatalogo(request) :
     nuevosDatosGenerales["portada"] = ruta_portada
     nuevosDatosGenerales["fechaPublicacion"] = fechaPublicacion
     nuevosDatosGenerales["idAutor"] = idAutor
+    nuevosDatosGenerales["ISBN"] = isbn
     nuevosDatosGenerales["fecha"] = datetime.now().strftime("%Y-%m-%d")
 
     # resultado = administracion_model.ADMAgregarLibroCatalogo(datosGenerales)
     resultado = administracion_model.ADMAgregarLibroCatalogo(nuevosDatosGenerales)
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMObenerLibroEdicion(request) :
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
+    data = json.loads(request.body)
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
+
+    resultado = administracion_model.ADMObenerLibroEdicion(datosGenerales["idLibro"])
+    # resultado["datosGenerales"] = administracion_model.ADMObenerLibroEdicion(datosGenerales["idLibro"])
+    # resultado["autores"] = administracion_model.ADMObtenerAutoresLibro(datosGenerales["idLibro"])
+    
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt
@@ -291,31 +310,41 @@ def ADMDeshabilitarInventario(request) :
 
 @csrf_exempt
 def ADMObtenerVentas(request) :
-    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-        return HttpResponse()
+    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+    #     return HttpResponse()
+    
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGenerales)) :
+        return JsonResponse(False, safe=False)
     
     resultado = administracion_model.ADMObtenerVentas()
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt
 def ADMObtenerVenta(request) :
-    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-        return HttpResponse()
-    
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
     data = json.loads(request.body)
-    datosGenerales = data.get("datosGenerales")
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
     
     resultado = administracion_model.ADMObtenerVenta(datosGenerales["idVenta"])
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt
 def ADMEntregarVenta(request) :
-    if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-        return HttpResponse()
-    
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
     data = json.loads(request.body)
-    datosGenerales = data.get("datosGenerales")
-    datosGenerales["idUsuario"] = request.session.get('idUsuario')
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
     
     resultado = administracion_model.ADMEntregarVenta(datosGenerales)
     return JsonResponse(resultado, safe=False)

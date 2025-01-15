@@ -124,7 +124,11 @@ def ADMObtenerIdiomasActivos() :
 def ADMAgregarLibroCatalogo(datosGenerales) :
     try:
         with transaction.atomic() :
-        
+            
+            comprobacionISBN = comprobarExistenciaISBNLibroAgregar(datosGenerales["ISBN"])
+            if (comprobacionISBN >= 1) :
+                return False
+                
             idLibro = insertarLibro(datosGenerales) 
 
             insertarLibroAutor(idLibro, datosGenerales["idAutor"])
@@ -134,9 +138,27 @@ def ADMAgregarLibroCatalogo(datosGenerales) :
         print("Error en la inserción, transacción revertida:", e)
         return False
 
+def comprobarExistenciaISBNLibroAgregar(ISBN) :
+    sql = """SELECT 
+                COUNT(id) AS libro
+            FROM    
+                cat_libros
+            WHERE
+                ISBN = '""" + str(ISBN) + """'"""
+                
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+                resultado = cursor.fetchone()[0]  # Recuperar el ID generado
+            return resultado
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
+
 def insertarLibro(datosGenerales) :
     sql = """INSERT INTO cat_libros
-                (titulo, precio, descuento, iva, idgenero, fechapublicacion, portada, sinopsis, fecharegistro, paginas, ididioma, ideditorial, activo)
+                (titulo, precio, descuento, iva, idgenero, fechapublicacion, portada, sinopsis, fecharegistro, paginas, ididioma, ideditorial, isbn, activo)
             VALUES
                 ('""" + str(datosGenerales["titulo"]) + """', 
                 '""" + str(datosGenerales["precio"]) + """', 
@@ -149,6 +171,7 @@ def insertarLibro(datosGenerales) :
                 '""" + str(datosGenerales["fecha"]) + """', 
                 '""" + str(datosGenerales["paginas"]) + """', 
                 '""" + str(datosGenerales["idIdioma"]) + """', 
+                '""" + str(datosGenerales["ISBN"]) + """', 
                 '""" + str(datosGenerales["idEditorial"]) + """', 
                 'S')
                 RETURNING id"""
@@ -177,6 +200,55 @@ def insertarLibroAutor(idLibro, idAutor) :
     except IntegrityError as e:
         print("Error en la inserción, transacción revertida:", e)
         return False
+    
+def ADMObenerLibroEdicion(idLibro) :
+    sql = """SELECT
+                cat_libros.titulo, cat_libros.precio, cat_libros.descuento, cat_libros.iva, 
+                cat_libros.fechapublicacion, cat_libros.portada, cat_libros.sinopsis, cat_libros.paginas, cat_libros.isbn,
+                
+                cat_librosautores.idautor,
+                
+                cat_editoriales.id AS ideditorial,
+                
+                cat_idioma.id AS ididioma,
+                
+                conf_genero.id AS idgenero
+            FROM
+                cat_libros
+            LEFT JOIN
+                cat_editoriales ON cat_libros.ideditorial = cat_editoriales.id
+            LEFT JOIN
+                cat_idioma ON cat_libros.ididioma = cat_idioma.id
+            LEFT JOIN
+                conf_genero ON cat_libros.idgenero = conf_genero.id
+            LEFT JOIN
+                cat_librosautores ON cat_libros.id = cat_librosautores.idlibro
+            WHERE
+                cat_libros.id = '""" + str(idLibro) + """'"""
+                
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultado = cursor.fetchone()
+
+    return resultado
+
+def ADMObtenerAutoresLibro(idLibro) :
+    sql = """SELECT
+                cat_librosautores.idautor,
+
+                CONCAT(conf_autores.apellidopaterno, ' ', conf_autores.apellidomaterno, ' ', conf_autores.nombre) AS autor
+            FROM
+                cat_librosautores
+            LEFT JOIN
+                conf_autores ON cat_librosautores.idautor = conf_autores.idautor
+            WHERE
+                cat_librosautores.idlibro = '""" + str(idLibro) + """'"""
+    
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultado = cursor.fetchall()
+
+    return resultado
     
 def ADMDeshabilitarLibro(idLibro) :
     sql = """UPDATE 
