@@ -79,6 +79,68 @@ def ADMObtenerAutores() :
 
     return resultados
 
+def ADMObtenerEditoriales() :
+    sql = """SELECT
+                id, editorial, activo
+            FROM
+                cat_editoriales"""
+                
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultados = cursor.fetchall()
+
+    return resultados
+
+def ADMAgregarEditorial(nombre) :
+    sql = """INSERT INTO cat_editoriales
+                (editorial, activo)
+            VALUES
+                ('""" + str(nombre) + """', 'S')"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
+    
+def ADMHabilitarEditorial(idEditorial) :
+    sql = """UPDATE 
+                cat_editoriales
+            SET
+                activo = 'S'
+            WHERE
+                id = '""" + str(idEditorial) + """'"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la Actualizacion, transacción revertida:", e)
+        return False
+    
+def ADMDesHabilitarEditorial(idEditorial) :
+    sql = """UPDATE 
+                cat_editoriales
+            SET
+                activo = 'N'
+            WHERE
+                id = '""" + str(idEditorial) + """'"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la Actualizacion, transacción revertida:", e)
+        return False
+    
+
 def ADMObtenerGenerosActivos() :
     sql = """SELECT
                 id, genero

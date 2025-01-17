@@ -47,6 +47,61 @@ def ADMObtenerAutores(request) :
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt
+def ADMObtenerEditoriales(request) :
+    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+    #     return HttpResponse()
+    
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGenerales)) :
+        return JsonResponse(False, safe=False)
+
+    resultado = administracion_model.ADMObtenerEditoriales()
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMAgregarEditorial(request) :
+   # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
+    data = json.loads(request.body)
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
+
+    resultado = administracion_model.ADMAgregarEditorial(datosGenerales["nombre"])
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMHabilitarEditorial(request) :
+   # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
+    data = json.loads(request.body)
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
+
+    resultado = administracion_model.ADMHabilitarEditorial(datosGenerales["idEditorial"])
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMDesHabilitarEditorial(request) :
+   # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
+    data = json.loads(request.body)
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
+
+    resultado = administracion_model.ADMDesHabilitarEditorial(datosGenerales["idEditorial"])
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
 def ADMObtenerGenerosActivos(request) :
     # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
     #     return HttpResponse()

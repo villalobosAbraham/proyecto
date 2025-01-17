@@ -66,11 +66,13 @@ CORS_ALLOW_CREDENTIALS = True  # Permite credenciales (cookies) en solicitudes C
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",  # Agrega la URL de tu frontend
+    # "https://frontend-angular-theta.vercel.app/login",  # Agrega la URL de tu frontend
 ]
 
 # Si usas cookies SameSite
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:4200',
+    # 'https://frontend-angular-theta.vercel.app/login',
 ]
 
 TEMPLATES = [
