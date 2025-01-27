@@ -155,6 +155,52 @@ def ADMObtenerGenerosActivos() :
 
     return resultados
 
+def ADMObtenerGeneros() :
+    sql = """SELECT
+                id, genero, activo
+            FROM
+                conf_genero"""
+                
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultados = cursor.fetchall()
+
+    return resultados
+
+def ADMDesHabilitarGenero(idGenero) :
+    sql = """UPDATE 
+                conf_genero
+            SET
+                activo = 'N'
+            WHERE
+                id = '""" + str(idGenero) + """'"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la Actualizacion, transacción revertida:", e)
+        return False
+
+def ADMHabilitarGenero(idGenero) :
+    sql = """UPDATE 
+                conf_genero
+            SET
+                activo = 'S'
+            WHERE
+                id = '""" + str(idGenero) + """'"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la Actualizacion, transacción revertida:", e)
+        return False
+
 def ADMObtenerEditorialesActivos() :
     sql = """SELECT
                 id, editorial
@@ -704,3 +750,15 @@ def ADMEntregarVenta(datosGenerales) :
     except IntegrityError as e:
         print("Error en la inserción, transacción revertida:", e)
         return False
+    
+def ADMObtenerEmpleados() :
+    sql = """SELECT
+                id, CONCAT(apellidopaterno, ' ', apellidopaterno, ' ', nombre) AS empleado, email, fecharegistro, telefono, fechanacimiento, activo
+            FROM
+                log_usuarios"""
+                
+    with connection.cursor() as cursor:
+        cursor.execute(sql)
+        resultados = cursor.fetchall()
+
+    return resultados

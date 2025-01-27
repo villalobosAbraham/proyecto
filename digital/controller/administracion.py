@@ -115,6 +115,47 @@ def ADMObtenerGenerosActivos(request) :
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt
+def ADMObtenerGeneros(request) :
+    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+    #     return HttpResponse()
+    
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGenerales)) :
+        return JsonResponse(False, safe=False)
+
+    resultado = administracion_model.ADMObtenerGeneros()
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMDesHabilitarGenero(request) :
+   # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
+    data = json.loads(request.body)
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
+
+    resultado = administracion_model.ADMDesHabilitarGenero(datosGenerales["idGenero"])
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMHabilitarGenero(request) :
+   # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
+    data = json.loads(request.body)
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
+
+    resultado = administracion_model.ADMHabilitarGenero(datosGenerales["idGenero"])
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
 def ADMObtenerEditorialesActivos(request) :
     # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
     #     return HttpResponse()
@@ -402,4 +443,17 @@ def ADMEntregarVenta(request) :
     datosGenerales = datosGeneralesConToken["datosGenerales"]
     
     resultado = administracion_model.ADMEntregarVenta(datosGenerales)
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMObtenerEmpleados(request) :
+    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
+    #     return HttpResponse()
+    
+    data = json.loads(request.body)
+    datosGenerales = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGenerales)) :
+        return JsonResponse(False, safe=False)
+
+    resultado = administracion_model.ADMObtenerEmpleados()
     return JsonResponse(resultado, safe=False)

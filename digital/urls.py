@@ -48,7 +48,10 @@ urlpatterns = [
     path("ADMAgregarEditorial/", administracion.ADMAgregarEditorial),    
     path("ADMHabilitarEditorial/", administracion.ADMHabilitarEditorial),    
     path("ADMDesHabilitarEditorial/", administracion.ADMDesHabilitarEditorial),    
+    path("ADMObtenerGeneros/", administracion.ADMObtenerGeneros),
     path("ADMObtenerGenerosActivos/", administracion.ADMObtenerGenerosActivos),
+    path("ADMDesHabilitarGenero/", administracion.ADMDesHabilitarGenero),
+    path("ADMHabilitarGenero/", administracion.ADMHabilitarGenero),
     path("ADMObtenerEditorialesActivos/", administracion.ADMObtenerEditorialesActivos),
     path("ADMObtenerIdiomasActivos/", administracion.ADMObtenerIdiomasActivos),
     path("ADMAgregarLibroCatalogo/", administracion.ADMAgregarLibroCatalogo),
@@ -67,6 +70,7 @@ urlpatterns = [
     path("ADMObtenerVentas/", administracion.ADMObtenerVentas),
     path("ADMObtenerVenta/", administracion.ADMObtenerVenta),
     path("ADMEntregarVenta/", administracion.ADMEntregarVenta),
+    path("ADMObtenerEmpleados/", administracion.ADMObtenerEmpleados),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
