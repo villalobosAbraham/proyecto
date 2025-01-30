@@ -457,3 +457,19 @@ def ADMObtenerEmpleados(request) :
 
     resultado = administracion_model.ADMObtenerEmpleados()
     return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMRegistrarEmpleado(request) :
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
+    data = json.loads(request.body)
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
+    datosGenerales["activo"] = "S"
+    datosGenerales["fechaRegistro"] = datetime.now().strftime("%Y-%m-%d")
+    
+    resultado = administracion_model.ADMRegistrarEmpleado(datosGenerales)
+    return JsonResponse(resultado, safe=False)

@@ -1,5 +1,6 @@
 from django.db.models import Max, F
 from django.db import transaction, IntegrityError, connection
+from digital.models import LogUsuarios
 
 def ADMObtenerLibros() :
     sql = """SELECT 
@@ -762,3 +763,27 @@ def ADMObtenerEmpleados() :
         resultados = cursor.fetchall()
 
     return resultados
+
+def ADMRegistrarEmpleado(datosGenerales) :
+    try:
+        with transaction.atomic():
+            
+            nuevo_usuario = LogUsuarios(
+                email = datosGenerales["email"],
+                contraseña = datosGenerales["contraseña"],
+                nombre = datosGenerales["nombre"],
+                apellidopaterno = datosGenerales["apellidoPaterno"],
+                apellidomaterno = datosGenerales["apellidoMaterno"],
+                fecharegistro = datosGenerales["fechaRegistro"],
+                telefono = datosGenerales["telefono"],
+                fechanacimiento = datosGenerales["fechaNacimiento"],
+                activo = datosGenerales["activo"],
+                idtipousuario_id = 2
+            )
+            nuevo_usuario.save()
+            # Otros posibles inserts o actualizaciones dentro de la misma transacción
+        return True
+    except IntegrityError as e:
+        # Manejar la excepción, por ejemplo, loggear el error o retornar un mensaje
+        print("Error en la Creacion de Usuario:", e)
+        return False
