@@ -473,3 +473,31 @@ def ADMRegistrarEmpleado(request) :
     
     resultado = administracion_model.ADMRegistrarEmpleado(datosGenerales)
     return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMDeshabilitarEmpleado(request) :
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
+    data = json.loads(request.body)
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
+    
+    resultado = administracion_model.ADMDeshabilitarEmpleado(datosGenerales["idEmpleado"])
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMHabilitarEmpleado(request) :
+    # if(not request.session.get('idUsuario', False)) :
+    #     return HttpResponse()
+    data = json.loads(request.body)
+    datosGeneralesConToken = data.get("datosGenerales")
+    if (not tokens.validarTokenEmpleados(datosGeneralesConToken["token"])) :
+        return JsonResponse(False, safe=False)
+    
+    datosGenerales = datosGeneralesConToken["datosGenerales"]
+    
+    resultado = administracion_model.ADMHabilitarEmpleado(datosGenerales["idEmpleado"])
+    return JsonResponse(resultado, safe=False)

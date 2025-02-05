@@ -140,7 +140,6 @@ def ADMDesHabilitarEditorial(idEditorial) :
     except IntegrityError as e:
         print("Error en la Actualizacion, transacción revertida:", e)
         return False
-    
 
 def ADMObtenerGenerosActivos() :
     sql = """SELECT
@@ -786,4 +785,39 @@ def ADMRegistrarEmpleado(datosGenerales) :
     except IntegrityError as e:
         # Manejar la excepción, por ejemplo, loggear el error o retornar un mensaje
         print("Error en la Creacion de Usuario:", e)
+        return False
+    
+    
+def ADMDeshabilitarEmpleado(idEmpleado) :
+    sql = """UPDATE 
+                log_usuarios
+            SET
+                activo = 'N'
+            WHERE
+                id = '""" + str(idEmpleado) + """'"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la Actualizacion, transacción revertida:", e)
+        return False
+    
+def ADMHabilitarEmpleado(idEmpleado) :
+    sql = """UPDATE 
+                log_usuarios
+            SET
+                activo = 'S'
+            WHERE
+                id = '""" + str(idEmpleado) + """'"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la Actualizacion, transacción revertida:", e)
         return False

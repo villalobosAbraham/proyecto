@@ -72,6 +72,8 @@ urlpatterns = [
     path("ADMEntregarVenta/", administracion.ADMEntregarVenta),
     path("ADMObtenerEmpleados/", administracion.ADMObtenerEmpleados),
     path("ADMRegistrarEmpleado/", administracion.ADMRegistrarEmpleado),
+    path("ADMDeshabilitarEmpleado/", administracion.ADMDeshabilitarEmpleado),
+    path("ADMHabilitarEmpleado/", administracion.ADMHabilitarEmpleado),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
