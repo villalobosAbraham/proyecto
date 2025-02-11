@@ -821,3 +821,108 @@ def ADMHabilitarEmpleado(idEmpleado) :
     except IntegrityError as e:
         print("Error en la Actualizacion, transacción revertida:", e)
         return False
+    
+def obtenerPortadaVieja(idLibro) :
+    sql = """SELECT
+                portada
+            FROM
+                cat_libros
+            WHERE
+                id = '""" + str(idLibro) + """'"""
+                
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+                portada = cursor.fetchone()[0]  # Recuperar el ID generado
+            return portada
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
+    
+def ADMEditarLibroCatalogo(datosGenerales) :
+    try:
+        with transaction.atomic() :
+            
+            comprobacionISBN = comprobarExistenciaISBNLibroEditar(datosGenerales["idLibro"], datosGenerales["ISBN"])
+            if (comprobacionISBN >= 1) :
+                print("no vale verga el ISBN")
+                return False
+                
+            editarLibro(datosGenerales) 
+
+            editarLibroAutor(datosGenerales["idLibro"], datosGenerales["idAutor"])
+
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
+    
+def comprobarExistenciaISBNLibroEditar(idLibro, ISBN) :
+    sql = """SELECT 
+                COUNT(id) AS libro
+            FROM    
+                cat_libros
+            WHERE
+                id != '""" + str(idLibro) + """' AND
+                isbn = '""" + str(ISBN) + """'"""
+                
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+                resultado = cursor.fetchone()[0]  # Recuperar el ID generado
+            return resultado
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        return False
+    
+def editarLibro(datosGenerales) :
+    sql = """UPDATE 
+                cat_libros
+            SET
+                titulo = '""" + str(datosGenerales["titulo"]) + """', 
+                precio = '""" + str(datosGenerales["precio"]) + """', 
+                descuento = '""" + str(datosGenerales["descuento"]) + """', 
+                iva = '""" + str(datosGenerales["iva"]) + """', 
+                idgenero = '""" + str(datosGenerales["idGenero"]) + """', 
+                fechapublicacion = '""" + str(datosGenerales["fechaPublicacion"]) + """',
+                sinopsis = '""" + str(datosGenerales["sinopsis"]) + """',
+                paginas = '""" + str(datosGenerales["paginas"]) + """',
+                ididioma = '""" + str(datosGenerales["idIdioma"]) + """',
+                ideditorial = '""" + str(datosGenerales["idEditorial"]) + """',
+                isbn = '""" + str(datosGenerales["ISBN"]) + """'"""
+    
+    if (datosGenerales["portada"]) :        
+        sql += """,portada = '""" + str(datosGenerales["portada"]) + """'"""
+    
+    sql += """WHERE id = '""" + str(datosGenerales["idLibro"]) + """'"""
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        print("no vale verga la edicion de libro")
+        return False
+    
+def editarLibroAutor(idLibro, idAutor) :
+    sql = """DELETE FROM 
+                cat_librosautores
+            WHERE
+                idlibro = '""" + str(idLibro) + """';
+            INSERT INTO cat_librosautores
+                (idlibro, idautor)
+            VALUES
+                ('""" + str(idLibro) + """', '""" + str(idAutor) + """')"""
+    
+    try:
+        with transaction.atomic() :
+            with connection.cursor() as cursor:
+                cursor.execute(sql)
+            return True
+    except IntegrityError as e:
+        print("Error en la inserción, transacción revertida:", e)
+        print("no vale verga la edicion de autores")
+        return False

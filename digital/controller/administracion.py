@@ -203,17 +203,7 @@ def ADMAgregarLibroCatalogo(request) :
     fechaPublicacion = request.POST.get('fechaPublicacion')
     idAutor = request.POST.get('idAutor')
     isbn = request.POST.get('ISBN')
-        
-    
-    # if(not request.session.get('idUsuario', False) or not request.sesion.get('idTipoUsuario', False)) :
-    #     return HttpResponse()
-    # data = json.loads(request.body)
-    # datosGeneralesConToken = data.get("datosGenerales")
-    # if (not tokens.validarTokenEmpleados(request.POST.get('token'))) :
-    #     return JsonResponse(False, safe=False)
-    
-    # datosGenerales = datosGeneralesConToken["datosGenerales"]
-    # datosGenerales["fecha"] = datetime.now().strftime("%Y-%m-%d")
+
     nuevosDatosGenerales = {}
     nuevosDatosGenerales["titulo"] = titulo
     nuevosDatosGenerales["precio"] = precio
@@ -277,6 +267,49 @@ def ADMHabilitarLibro(request) :
     datosGenerales = datosGeneralesConToken["datosGenerales"]
 
     resultado = administracion_model.ADMHabilitarLibro(datosGenerales["idLibro"])
+    return JsonResponse(resultado, safe=False)
+
+@csrf_exempt
+def ADMEditarLibroCatalogo(request) :
+    idLibro = request.POST.get('idLibro')
+    portada = request.FILES.get('portada')
+    rutaPortadaVieja = administracion_model.obtenerPortadaVieja(idLibro)
+    if portada:
+        default_storage.delete(rutaPortadaVieja)
+        ruta_portada = default_storage.save(f'portadas/{portada.name}', portada)
+
+
+    # Captura los demás datos del formulario
+    titulo = request.POST.get('titulo')
+    precio = request.POST.get('precio')
+    descuento = request.POST.get('descuento')
+    iva = request.POST.get('iva')
+    idGenero = request.POST.get('idGenero')
+    sinopsis = request.POST.get('sinopsis')
+    paginas = request.POST.get('paginas')
+    idIdioma = request.POST.get('idIdioma')
+    idEditorial = request.POST.get('idEditorial')
+    fechaPublicacion = request.POST.get('fechaPublicacion')
+    idAutor = request.POST.get('idAutor')
+    isbn = request.POST.get('ISBN')
+
+    nuevosDatosGenerales = {}
+    nuevosDatosGenerales["idLibro"] = idLibro
+    nuevosDatosGenerales["titulo"] = titulo
+    nuevosDatosGenerales["precio"] = precio
+    nuevosDatosGenerales["descuento"] = descuento
+    nuevosDatosGenerales["iva"] = iva
+    nuevosDatosGenerales["idGenero"] = idGenero
+    nuevosDatosGenerales["sinopsis"] = sinopsis
+    nuevosDatosGenerales["paginas"] = paginas
+    nuevosDatosGenerales["idIdioma"] = idIdioma
+    nuevosDatosGenerales["idEditorial"] = idEditorial
+    nuevosDatosGenerales["portada"] = ruta_portada
+    nuevosDatosGenerales["fechaPublicacion"] = fechaPublicacion
+    nuevosDatosGenerales["idAutor"] = idAutor
+    nuevosDatosGenerales["ISBN"] = isbn
+
+    resultado = administracion_model.ADMEditarLibroCatalogo(nuevosDatosGenerales)
     return JsonResponse(resultado, safe=False)
 
 @csrf_exempt
